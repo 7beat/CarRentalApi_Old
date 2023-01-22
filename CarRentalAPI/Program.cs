@@ -1,4 +1,5 @@
 using CarRentalAPI.Data;
+using CarRentalAPI.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +28,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
+
+//Adding Repositories
+builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+
+
 
 var app = builder.Build();
 

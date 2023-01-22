@@ -15,12 +15,18 @@ namespace CarRentalAPI.Repositories
 
         public async Task<IEnumerable<Vehicle>> GetAllAsync()
         {
-            return await appDbContext.Vehicles.Include(x => x.Color).ToListAsync();
+            return await appDbContext.Vehicles
+                .Include(x => x.Color)
+                //.Include(x => x.UserId) //To display current owner
+                .ToListAsync();
         }
 
         public Task<Vehicle> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return appDbContext.Vehicles
+                .Include(x => x.Color)
+                .Include(x => x.UserId)
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
     }
 }

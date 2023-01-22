@@ -17,7 +17,6 @@ namespace CarRentalAPI.Repositories
         {
             return await appDbContext.Vehicles
                 .Include(x => x.Color)
-                //.Include(x => x.UserId) //To display current owner
                 .ToListAsync();
         }
 
@@ -25,7 +24,6 @@ namespace CarRentalAPI.Repositories
         {
             return appDbContext.Vehicles
                 .Include(x => x.Color)
-                .Include(x => x.UserId)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
     }

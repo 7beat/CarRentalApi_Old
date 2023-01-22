@@ -15,14 +15,11 @@ namespace CarRentalAPI.Repositories
 
         public async Task<Vehicle> AddAsync(Vehicle vehicle)
         {
-            var SeeMe = vehicle;
             var addedVehicle = await _appDbContext.Vehicles.AddAsync(vehicle);
             await _appDbContext.SaveChangesAsync();
-
+            
             //WIP
-            var vehicleId = addedVehicle.Entity.Id;
-
-            return await GetByIdAsync(vehicleId);
+            return await GetByIdAsync(vehicle.Id);
         }
 
         public async Task<IEnumerable<Vehicle>> GetAllAsync()

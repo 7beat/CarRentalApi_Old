@@ -6,23 +6,35 @@ namespace CarRentalAPI.Repositories
 {
     public class VehicleRepository : IVehicleRepository
     {
-        private readonly AppDbContext appDbContext;
+        private readonly AppDbContext _appDbContext;
 
         public VehicleRepository(AppDbContext appDbContext)
         {
-            this.appDbContext = appDbContext;
+            _appDbContext = appDbContext;
+        }
+
+        public async Task<Vehicle> AddAsync(Vehicle vehicle)
+        {
+            var SeeMe = vehicle;
+            var addedVehicle = await _appDbContext.Vehicles.AddAsync(vehicle);
+            await _appDbContext.SaveChangesAsync();
+
+            //WIP
+            var vehicleId = addedVehicle.Entity.Id;
+
+            return await GetByIdAsync(vehicleId);
         }
 
         public async Task<IEnumerable<Vehicle>> GetAllAsync()
         {
-            return await appDbContext.Vehicles
+            return await _appDbContext.Vehicles
                 .Include(x => x.Color)
                 .ToListAsync();
         }
 
         public Task<Vehicle> GetByIdAsync(int id)
         {
-            return appDbContext.Vehicles
+            return _appDbContext.Vehicles
                 .Include(x => x.Color)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }

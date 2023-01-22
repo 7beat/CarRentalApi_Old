@@ -6,5 +6,6 @@ namespace CarRentalAPI.Repositories
     {
         Task<IEnumerable<Vehicle>> GetAllAsync();
         Task<Vehicle> GetByIdAsync(int id);
+        Task<Vehicle> AddAsync(Vehicle vehicle);
     }
 }

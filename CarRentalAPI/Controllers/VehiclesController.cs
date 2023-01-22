@@ -2,6 +2,8 @@
 using CarRentalAPI.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace CarRentalAPI.Controllers
 {
@@ -41,6 +43,24 @@ namespace CarRentalAPI.Controllers
             var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
 
             return Ok(vehicleDTO);
+        }
+
+        [HttpPost] //AddVehicle is required cuz i dont want to have id!
+        public async Task<IActionResult> AddVehicle([FromBody] Models.DTO.AddVehicleRequest addVehicleRequest)
+        {
+            var vehicleDomain = new Models.Domain.Vehicle
+            {
+                Brand = addVehicleRequest.Brand,
+                Model = addVehicleRequest.Model,
+                ColorId = addVehicleRequest.Color,
+                YearOfProduction = addVehicleRequest.YearOfProduction,
+            };
+
+            vehicleDomain = await vehicleRepository.AddAsync(vehicleDomain);
+
+            var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
+
+            return CreatedAtAction(nameof(GetVehicleById), new {id = vehicleDTO.Id}, vehicleDTO);
         }
     }
 }

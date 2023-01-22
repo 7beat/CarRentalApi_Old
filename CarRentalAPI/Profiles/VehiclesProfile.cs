@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace CarRentalAPI.Profiles
 {
-    public class VehcilesProfile : Profile
+    public class VehiclesProfile : Profile
     {
-        public VehcilesProfile()
+        public VehiclesProfile()
         {
             CreateMap<Models.Domain.Vehicle, Models.DTO.Vehicle>()
                 .ReverseMap();

@@ -1,4 +1,5 @@
-﻿using CarRentalAPI.Repositories;
+﻿using AutoMapper;
+using CarRentalAPI.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,12 @@ namespace CarRentalAPI.Controllers
     public class VehiclesController : ControllerBase
     {
         private readonly IVehicleRepository vehicleRepository;
+        private readonly IMapper mapper;
         
-        public VehiclesController(Repositories.IVehicleRepository vehicleRepository)
+        public VehiclesController(Repositories.IVehicleRepository vehicleRepository, IMapper mapper)
         {
             this.vehicleRepository = vehicleRepository;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -22,8 +25,9 @@ namespace CarRentalAPI.Controllers
 
             //Map to DTO
             //var vehiclesDTO
+            var vehiclesDTO = mapper.Map<List<Models.DTO.Vehicle>>(vehiclesDomain);
 
-            return Ok(vehiclesDomain);
+            return Ok(vehiclesDTO);
         }
     }
 }

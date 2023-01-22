@@ -23,11 +23,24 @@ namespace CarRentalAPI.Controllers
         {
             var vehiclesDomain = await vehicleRepository.GetAllAsync();
 
-            //Map to DTO
-            //var vehiclesDTO
             var vehiclesDTO = mapper.Map<List<Models.DTO.Vehicle>>(vehiclesDomain);
 
             return Ok(vehiclesDTO);
+        }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        [ActionName("GetVehicleById")]
+        public async Task<IActionResult> GetVehicleById(int id)
+        {
+            var vehicleDomain = await vehicleRepository.GetByIdAsync(id);
+
+            if (vehicleDomain is null)
+                return NotFound();
+
+            var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
+
+            return Ok(vehicleDTO);
         }
     }
 }

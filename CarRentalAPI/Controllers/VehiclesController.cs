@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CarRentalAPI.Data;
 using CarRentalAPI.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -85,6 +86,19 @@ namespace CarRentalAPI.Controllers
 
             var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
 
+            return Ok(vehicleDTO);
+        }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<IActionResult> DeleteVehicleAsync(int id)
+        {
+            var vehicleDomain = await vehicleRepository.DeteleAsync(id);
+
+            if (vehicleDomain is null)
+                return NotFound();
+
+            var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
             return Ok(vehicleDTO);
         }
 

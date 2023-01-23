@@ -35,5 +35,21 @@ namespace CarRentalAPI.Repositories
                 .Include(x => x.Color)
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        public async Task<Vehicle> UpdateAsync(int id, Vehicle vehicle)
+        {
+            var existingVehicle = await _appDbContext.Vehicles.FindAsync(id); //x => x.Id == id
+
+            if (existingVehicle is null)
+                return null;
+
+            //Modification
+            existingVehicle.ColorId = vehicle.ColorId;
+            existingVehicle.Model = vehicle.Model;
+            //existingVehicle.Model = vehicle.Model;
+
+            await _appDbContext.SaveChangesAsync();
+            return existingVehicle;
+        }
     }
 }

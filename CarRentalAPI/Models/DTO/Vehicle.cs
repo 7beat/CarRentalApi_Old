@@ -7,9 +7,7 @@ namespace CarRentalAPI.Models.DTO
         public int Id { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }
-        public Color Color { get; set; } //By default it will use System.Drawing
+        public string Color { get; set; }
         public DateOnly YearOfProduction { get; set; }
-
-        //public int? UserId { get; set; }
     }
 }

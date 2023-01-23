@@ -8,6 +8,8 @@ namespace CarRentalAPI.Profiles
         public VehiclesProfile()
         {
             CreateMap<Models.Domain.Vehicle, Models.DTO.Vehicle>()
+                .ForMember(dest => dest.Color, opt => opt.MapFrom(src =>
+                src.Color.Name))
                 .ReverseMap();
         }
     }

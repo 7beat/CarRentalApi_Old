@@ -29,12 +29,10 @@ namespace CarRentalAPI.Repositories
                 .ToListAsync();
         }
 
-        public Task<Vehicle> GetByIdAsync(int id)
-        {
-            return _appDbContext.Vehicles
+        public async Task<Vehicle> GetByIdAsync(int id)
+            => await _appDbContext.Vehicles
                 .Include(x => x.Color)
                 .FirstOrDefaultAsync(x => x.Id == id);
-        }
 
         public async Task<Vehicle> UpdateAsync(int id, Vehicle vehicle)
         {

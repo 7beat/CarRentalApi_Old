@@ -31,6 +31,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 //Adding Repositories
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 //AutoMapper Setup
 builder.Services.AddAutoMapper(typeof(Program).Assembly);

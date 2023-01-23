@@ -45,7 +45,7 @@ namespace CarRentalAPI.Controllers
             return Ok(vehicleDTO);
         }
 
-        [HttpPost] //AddVehicle is required cuz i dont want to have id!
+        [HttpPost]
         public async Task<IActionResult> AddVehicle([FromBody] Models.DTO.AddVehicleRequest addVehicleRequest)
         {
             var vehicleDomain = new Models.Domain.Vehicle
@@ -62,6 +62,60 @@ namespace CarRentalAPI.Controllers
 
             //201
             return CreatedAtAction(nameof(GetVehicleById), new {id = vehicleDTO.Id}, vehicleDTO);
+        }
+
+        [HttpPut]
+        [Route("{id:int}")]
+        public async Task<IActionResult> UpdateVehicleAsync([FromRoute] int id,
+            [FromBody] Models.DTO.UpdateVehicleRequest updateVehicleRequest)
+        {
+            if (!ValidateUpdateVehicle(updateVehicleRequest))
+                return BadRequest(ModelState);
+
+            var vehicleDomain = new Models.Domain.Vehicle
+            {
+                Model = updateVehicleRequest.Model,
+                ColorId = updateVehicleRequest.Color,
+            };
+
+            vehicleDomain = await vehicleRepository.UpdateAsync(id, vehicleDomain);
+
+            if (vehicleDomain is null)
+                return NotFound();
+
+            var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
+
+            return Ok(vehicleDTO);
+        }
+
+        private bool ValidateUpdateVehicle(Models.DTO.UpdateVehicleRequest updateVehicleRequest)
+        {
+            if (updateVehicleRequest is null)
+            {
+                ModelState.AddModelError(nameof(updateVehicleRequest), $"{nameof(updateVehicleRequest)} cant be empty.");
+                return false;
+            }
+
+            if (updateVehicleRequest.Color <= 0)
+            {
+                ModelState.AddModelError(nameof(updateVehicleRequest), $"{nameof(updateVehicleRequest.Color)} needs to be specified.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(updateVehicleRequest.Model))
+            {
+                ModelState.AddModelError(nameof(updateVehicleRequest), $"{nameof(updateVehicleRequest.Model)} is required.");
+                return false;
+            }
+
+            //return ModelState.ErrorCount <= 0;
+            //return ModelState.ErrorCount > 0 ? false : true;
+            if (ModelState.ErrorCount > 0)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

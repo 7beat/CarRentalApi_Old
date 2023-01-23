@@ -8,5 +8,6 @@ namespace CarRentalAPI.Repositories
         Task<Vehicle> GetByIdAsync(int id);
         Task<Vehicle> AddAsync(Vehicle vehicle);
         Task<Vehicle> UpdateAsync(int id, Vehicle vehicle);
+        Task<Vehicle> DeteleAsync(int id);
     }
 }

@@ -20,5 +20,13 @@ namespace CarRentalAPI.Repositories
                 .ThenInclude(x => x.Color)
                 .ToListAsync();
         }
+
+        public async Task<User> GetByIdAsync(int id)
+        {
+            return await _appDbContext.Users
+                .Include(x => x.Vehicles)
+                .ThenInclude(x => x.Color)
+                .FirstOrDefaultAsync(x => x.Id == id);
+        }
     }
 }

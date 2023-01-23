@@ -67,7 +67,7 @@ namespace CarRentalAPI.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<IActionResult> UpdateVehicleAsync([FromRoute] int id,
+        public async Task<IActionResult> UpdateVehicleAsync(int id,
             [FromBody] Models.DTO.UpdateVehicleRequest updateVehicleRequest)
         {
             if (!ValidateUpdateVehicle(updateVehicleRequest))

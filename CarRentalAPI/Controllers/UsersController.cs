@@ -24,9 +24,9 @@ namespace CarRentalAPI.Controllers
             var usersDomain = await vehicleRepository.GetAllAsync();
 
             //Convert to DTO
-            //var usersDTO = mapper.Map
+            var usersDTO = mapper.Map<List<Models.DTO.User>>(usersDomain);
 
-            return Ok(usersDomain);
+            return Ok(usersDTO);
         }
 
         [HttpGet]
@@ -35,7 +35,9 @@ namespace CarRentalAPI.Controllers
         {
             var userDomain = await vehicleRepository.GetByIdAsync(id);
 
-            return Ok(userDomain);
+            var userDTO = mapper.Map<Models.DTO.User>(userDomain);
+
+            return Ok(userDTO);
         }
     }
 }

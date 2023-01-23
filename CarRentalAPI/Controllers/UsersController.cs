@@ -28,5 +28,14 @@ namespace CarRentalAPI.Controllers
 
             return Ok(usersDomain);
         }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetUserById(int id)
+        {
+            var userDomain = await vehicleRepository.GetByIdAsync(id);
+
+            return Ok(userDomain);
+        }
     }
 }

@@ -22,6 +22,20 @@ namespace CarRentalAPI.Repositories
             return await GetByIdAsync(vehicle.Id);
         }
 
+        public async Task<Vehicle> DeteleAsync(int id)
+        {
+            var existingVehicle = await _appDbContext.Vehicles.FindAsync(id);
+
+            if (existingVehicle is not null)
+            {
+                _appDbContext.Vehicles.Remove(existingVehicle);
+                await _appDbContext.SaveChangesAsync();
+
+                return existingVehicle;
+            }
+            return null;
+        }
+
         public async Task<IEnumerable<Vehicle>> GetAllAsync()
         {
             return await _appDbContext.Vehicles

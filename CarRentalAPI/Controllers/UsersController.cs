@@ -25,7 +25,6 @@ namespace CarRentalAPI.Controllers
         {
             var usersDomain = await userRepository.GetAllAsync();
 
-            //Convert to DTO
             var usersDTO = mapper.Map<List<Models.DTO.User>>(usersDomain);
 
             return Ok(usersDTO);

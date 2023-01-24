@@ -90,6 +90,18 @@ namespace CarRentalAPI.Controllers
             return Ok(userDTO);
         }
 
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<IActionResult> DeleteUserAsync(int id)
+        {
+            var userDomain = await userRepository.DeleteAsync(id);
+
+            if (userDomain is null)
+                return NotFound();
+
+            var userDTO = mapper.Map<Models.DTO.User>(userDomain);
+            return Ok(userDTO);
+        }
 
         private async Task<bool> ValidateAddUserRequestAsync(Models.DTO.AddUserRequest user)
         {

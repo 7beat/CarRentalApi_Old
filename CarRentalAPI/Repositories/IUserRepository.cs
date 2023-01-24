@@ -1,4 +1,5 @@
-﻿using CarRentalAPI.Models.Domain;
+﻿using CarRentalAPI.Data;
+using CarRentalAPI.Models.Domain;
 
 namespace CarRentalAPI.Repositories
 {
@@ -6,5 +7,8 @@ namespace CarRentalAPI.Repositories
     {
         Task<IEnumerable<User>> GetAllAsync();
         Task<User> GetByIdAsync(int id);
+        Task<User> AddAsync(User user);
+        Task<bool> IsEmailUnique(string email);
+        Task<bool> IsUsernameUnique(string username);
     }
 }

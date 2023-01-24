@@ -53,6 +53,21 @@ namespace CarRentalAPI.Repositories
             return existingUser;
         }
 
+        public async Task<User> DeleteAsync(int id)
+        {
+            var existingUser = await _appDbContext.Users.FindAsync(id);
+
+            if (existingUser is not null)
+            {
+                _appDbContext.Users.Remove(existingUser);
+                await _appDbContext.SaveChangesAsync();
+
+                return existingUser;
+            }
+
+            return null;
+        }
+
         //Testing
         public async Task<bool> IsEmailUnique(string email)
         {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CarRentalAPI.Models.DTO;
 using CarRentalAPI.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,19 +10,19 @@ namespace CarRentalAPI.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly IUserRepository vehicleRepository;
+        private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
 
-        public UsersController(Repositories.IUserRepository vehicleRepository, IMapper mapper)
+        public UsersController(Repositories.IUserRepository userRepository, IMapper mapper)
         {
-            this.vehicleRepository = vehicleRepository;
+            this.userRepository = userRepository;
             this.mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllUsers()
         {
-            var usersDomain = await vehicleRepository.GetAllAsync();
+            var usersDomain = await userRepository.GetAllAsync();
 
             //Convert to DTO
             var usersDTO = mapper.Map<List<Models.DTO.User>>(usersDomain);
@@ -33,11 +34,50 @@ namespace CarRentalAPI.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetUserById(int id)
         {
-            var userDomain = await vehicleRepository.GetByIdAsync(id);
+            var userDomain = await userRepository.GetByIdAsync(id);
 
             var userDTO = mapper.Map<Models.DTO.User>(userDomain);
 
             return Ok(userDTO);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUserAsync([FromBody] Models.DTO.AddUserRequest user)
+        {
+            if (!await ValidateAddUserRequestAsync(user))
+                return BadRequest(ModelState);
+
+            var userDomain = new Models.Domain.User
+            {
+                Username = user.Username,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                BirthDay = user.BirthDay
+            };
+
+            userDomain = await userRepository.AddAsync(userDomain);
+
+            var userDTO = mapper.Map<Models.DTO.User>(userDomain);
+
+            return Ok(userDTO);
+        }
+
+        private async Task<bool> ValidateAddUserRequestAsync(Models.DTO.AddUserRequest user)
+        {
+            if (!await userRepository.IsEmailUnique(user.Email))
+            {
+                ModelState.AddModelError(nameof(user), $"{nameof(user.Email)} is already taken!");
+                return false;
+            }
+
+            if (!await userRepository.IsUsernameUnique(user.Username))
+            {
+                ModelState.AddModelError(nameof(user), $"{nameof(user.Username)} is already taken!");
+                return false;
+            }
+
+            return true;
         }
     }
 }

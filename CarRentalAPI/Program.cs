@@ -1,6 +1,7 @@
 using CarRentalAPI.Data;
 using CarRentalAPI.Extensions;
 using CarRentalAPI.Repositories;
+using CarRentalAPI.Repositories.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,7 @@ builder.Services.ConfigureIdentity();
 //Adding Repositories
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserAuthenticationRepository, UserAuthenticationRepository>();
 
 //AutoMapper Setup
 builder.Services.AddAutoMapper(typeof(Program).Assembly);

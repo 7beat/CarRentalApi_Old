@@ -18,18 +18,18 @@ namespace CarRentalAPI.Controllers
         [HttpPost]
         //[ServiceFilter(typeof(ValidationFilterAttribute))]
         [Route("Register")]
-        public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto loginRequest)
+        public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto registerRequest)
         {
-            var userResult = await repository.RegisterUserAsync(loginRequest);
+            var userResult = await repository.RegisterUserAsync(registerRequest);
             return !userResult.Succeeded ? new BadRequestObjectResult(userResult) : StatusCode(201);
         }
 
-        //[HttpPost]
-        //[Route("login")]
-        //public IActionResult SignUp(Models.DTO.LoginRequest loginRequest)
-        //{
-
-        //    return Ok("Logged");
-        //}
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Authenticate([FromBody] Models.DTO.UserLoginDto loginRequest)
+        {
+            var result = await repository.ValidateUserAsync(loginRequest);
+            return Ok(result);
+        }
     }
 }

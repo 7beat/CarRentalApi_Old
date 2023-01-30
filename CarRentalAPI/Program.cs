@@ -20,18 +20,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.ConfigureDbContext(builder.Configuration);
 
-//Authentication
+// Authentication
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 
-//Repositories
+// Repositories
 builder.Services.ConfigureRepositories();
 
-//Mapper
+// Mapper
 builder.Services.ConfigureMapping();
 
-//FluentValidation
+// FluentValidation
 builder.Services.ConfigureFluentValidation();
 
 var app = builder.Build();

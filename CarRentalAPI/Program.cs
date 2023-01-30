@@ -15,11 +15,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "CarRentalAPI", Version = "v1" });
-    options.EnableAnnotations();
-});
+builder.Services.ConfigureSwagger();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddFluentValidationAutoValidation()
     .AddFluentValidationClientsideAdapters()
@@ -34,6 +31,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 //Authentication
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
+builder.Services.ConfigureJWT(builder.Configuration);
 
 //Adding Repositories
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();

@@ -18,28 +18,21 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.ConfigureSwagger();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddFluentValidationAutoValidation()
-    .AddFluentValidationClientsideAdapters()
-    .AddValidatorsFromAssemblyContaining<Program>();
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-});
+builder.Services.ConfigureDbContext(builder.Configuration);
 
 //Authentication
 builder.Services.AddAuthentication();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT(builder.Configuration);
 
-//Adding Repositories
-builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IUserAuthenticationRepository, UserAuthenticationRepository>();
+//Repositories
+builder.Services.ConfigureRepositories();
 
-//AutoMapper Setup
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
+//Mapper
+builder.Services.ConfigureMapping();
+
+//FluentValidation
+builder.Services.ConfigureFluentValidation();
 
 var app = builder.Build();
 

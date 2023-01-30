@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CarRentalAPI.Models.Domain;
+using CarRentalAPI.Models.DTO;
+using CarRentalAPI.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRentalAPI.Controllers
@@ -7,21 +10,39 @@ namespace CarRentalAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly IUserAuthenticationRepository repository;
+        public AuthController(IUserAuthenticationRepository repository)
+        {
+            this.repository = repository;
+        }
+
+        [HttpPost]
+        //[ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Route("Register")]
+        public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto registerRequest)
+        {
+            var userResult = await repository.RegisterUserAsync(registerRequest);
+            return !userResult.Succeeded ? new BadRequestObjectResult(userResult) : StatusCode(201);
+        }
 
         [HttpPost]
         [Route("login")]
-        public IActionResult Login(Models.DTO.LoginRequest loginRequest)
-        {
+        public async Task<IActionResult> Authenticate([FromBody] Models.DTO.UserLoginDto loginRequest)
+            => !await repository.ValidateUserAsync(loginRequest) ? Unauthorized() : Ok(new { Token = await repository.CreateTokenAsync() });
 
-            return Ok("Logged");
-        }
 
         //[HttpPost]
         //[Route("login")]
-        //public IActionResult SignUp(Models.DTO.LoginRequest loginRequest)
+        //public async Task<IActionResult> Authenticate([FromBody] Models.DTO.UserLoginDto loginRequest)
         //{
-
-        //    return Ok("Logged");
+        //    if (!await repository.ValidateUserAsync(loginRequest))
+        //    {
+        //        return Unauthorized();
+        //    }
+        //    else
+        //    {
+        //        return Ok(new { Token = await repository.CreateTokenAsync() });
+        //    }
         //}
     }
 }

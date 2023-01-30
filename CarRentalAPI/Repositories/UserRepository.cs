@@ -1,5 +1,6 @@
 ﻿using CarRentalAPI.Data;
 using CarRentalAPI.Models.Domain;
+using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarRentalAPI.Repositories

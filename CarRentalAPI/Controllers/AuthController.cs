@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CarRentalAPI.Models.DTO;
+using CarRentalAPI.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarRentalAPI.Controllers
@@ -7,13 +9,19 @@ namespace CarRentalAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
+        private readonly IUserAuthenticationRepository repository;
+        public AuthController(IUserAuthenticationRepository repository)
+        {
+            this.repository = repository;
+        }
 
         [HttpPost]
-        [Route("login")]
-        public IActionResult Login(Models.DTO.LoginRequest loginRequest)
+        //[ServiceFilter(typeof(ValidationFilterAttribute))]
+        [Route("Register")]
+        public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto loginRequest)
         {
-
-            return Ok("Logged");
+            var userResult = await repository.RegisterUserAsync(loginRequest);
+            return !userResult.Succeeded ? new BadRequestObjectResult(userResult) : StatusCode(201);
         }
 
         //[HttpPost]

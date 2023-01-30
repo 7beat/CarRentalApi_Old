@@ -1,4 +1,5 @@
 using CarRentalAPI.Data;
+using CarRentalAPI.Extensions;
 using CarRentalAPI.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -29,6 +30,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
+//Authentication
+builder.Services.AddAuthentication();
+builder.Services.ConfigureIdentity();
+
 //Adding Repositories
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -47,6 +52,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -7,5 +7,7 @@ namespace CarRentalAPI.Repositories.Interfaces
     public interface IUserAuthenticationRepository
     {
         Task<IdentityResult> RegisterUserAsync(UserRegistrationDto user);
+        Task<bool> ValidateUserAsync(UserLoginDto loginDto);
+        Task<string> CreateTokenAsync();
     }
 }

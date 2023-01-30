@@ -2,9 +2,9 @@
 
 namespace CarRentalAPI.Profiles
 {
-    public class UsersProfile : Profile
+    public class UserProfile : Profile
     {
-        public UsersProfile()
+        public UserProfile()
         {
             CreateMap<Models.Domain.User, Models.DTO.User>()
                 .ReverseMap();

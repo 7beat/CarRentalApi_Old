@@ -115,8 +115,8 @@ namespace CarRentalAPI.Extensions
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
             var mapperConfig = new MapperConfiguration(map =>
             {
-                map.AddProfile<UsersProfile>();
-                map.AddProfile<VehiclesProfile>();
+                map.AddProfile<UserProfile>();
+                map.AddProfile<VehicleProfile>();
                 map.AddProfile<UserMappingProfile>();
             });
             services.AddSingleton(mapperConfig.CreateMapper());

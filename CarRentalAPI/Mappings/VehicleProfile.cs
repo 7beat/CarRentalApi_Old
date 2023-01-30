@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace CarRentalAPI.Profiles
 {
-    public class VehiclesProfile : Profile
+    public class VehicleProfile : Profile
     {
-        public VehiclesProfile()
+        public VehicleProfile()
         {
             CreateMap<Models.Domain.Vehicle, Models.DTO.Vehicle>()
                 .ForMember(dest => dest.Color, opt => opt.MapFrom(src =>

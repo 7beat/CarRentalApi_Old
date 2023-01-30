@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using CarRentalAPI.Data;
-using CarRentalAPI.Repositories;
+using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,7 +15,7 @@ namespace CarRentalAPI.Controllers
         private readonly IVehicleRepository vehicleRepository;
         private readonly IMapper mapper;
         
-        public VehiclesController(Repositories.IVehicleRepository vehicleRepository, IMapper mapper)
+        public VehiclesController(IVehicleRepository vehicleRepository, IMapper mapper)
         {
             this.vehicleRepository = vehicleRepository;
             this.mapper = mapper;

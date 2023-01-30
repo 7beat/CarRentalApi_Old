@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using CarRentalAPI.Models.Domain;
 using CarRentalAPI.Models.DTO;
-using CarRentalAPI.Repositories;
+using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +14,7 @@ namespace CarRentalAPI.Controllers
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
 
-        public UsersController(Repositories.IUserRepository userRepository, IMapper mapper)
+        public UsersController(IUserRepository userRepository, IMapper mapper)
         {
             this.userRepository = userRepository;
             this.mapper = mapper;

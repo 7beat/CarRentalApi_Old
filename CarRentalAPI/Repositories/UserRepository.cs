@@ -1,5 +1,6 @@
 ﻿using CarRentalAPI.Data;
 using CarRentalAPI.Models.Domain;
+using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,9 +23,9 @@ namespace CarRentalAPI.Repositories
             return await GetByIdAsync(user.Id);
         }
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<AppUser>> GetAllAsync()
         {
-            return await _appDbContext.Users
+            return await _appDbContext.AppUsers
                 .Include(x => x.Vehicles)
                 .ThenInclude(x => x.Color)
                 .ToListAsync();

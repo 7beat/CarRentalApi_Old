@@ -40,10 +40,11 @@ namespace CarRentalAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(type: "longtext", nullable: true)
+                    FirstName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    LastName = table.Column<string>(type: "longtext", nullable: true)
+                    LastName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Birthday = table.Column<DateOnly>(type: "date", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NormalizedUserName = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: true)
@@ -243,11 +244,17 @@ namespace CarRentalAPI.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     YearOfProduction = table.Column<DateOnly>(type: "date", nullable: false),
                     ColorId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true)
+                    UserId = table.Column<int>(type: "int", nullable: true),
+                    AppUserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vehicles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Vehicles_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Vehicles_Colors_ColorId",
                         column: x => x.ColorId,
@@ -339,6 +346,11 @@ namespace CarRentalAPI.Migrations
                 column: "VehicleId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Vehicles_AppUserId",
+                table: "Vehicles",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Vehicles_ColorId",
                 table: "Vehicles",
                 column: "ColorId");
@@ -374,10 +386,10 @@ namespace CarRentalAPI.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Vehicles");
 
             migrationBuilder.DropTable(
-                name: "Vehicles");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Colors");

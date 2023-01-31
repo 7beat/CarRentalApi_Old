@@ -98,6 +98,9 @@ namespace CarRentalAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int?>("AppUserId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -117,6 +120,8 @@ namespace CarRentalAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AppUserId");
+
                     b.HasIndex("ColorId");
 
                     b.HasIndex("UserId");
@@ -133,6 +138,9 @@ namespace CarRentalAPI.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<DateOnly>("Birthday")
+                        .HasColumnType("date");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("longtext");
@@ -145,9 +153,11 @@ namespace CarRentalAPI.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<bool>("LockoutEnabled")
@@ -342,6 +352,10 @@ namespace CarRentalAPI.Migrations
 
             modelBuilder.Entity("CarRentalAPI.Models.Domain.Vehicle", b =>
                 {
+                    b.HasOne("CarRentalAPI.Models.Identity.AppUser", null)
+                        .WithMany("Vehicles")
+                        .HasForeignKey("AppUserId");
+
                     b.HasOne("CarRentalAPI.Models.Domain.Color", "Color")
                         .WithMany()
                         .HasForeignKey("ColorId")
@@ -407,6 +421,11 @@ namespace CarRentalAPI.Migrations
                 });
 
             modelBuilder.Entity("CarRentalAPI.Models.Domain.User", b =>
+                {
+                    b.Navigation("Vehicles");
+                });
+
+            modelBuilder.Entity("CarRentalAPI.Models.Identity.AppUser", b =>
                 {
                     b.Navigation("Vehicles");
                 });

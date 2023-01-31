@@ -47,13 +47,14 @@ namespace CarRentalAPI.Repositories
             return existingUser;
         }
 
-        public async Task<User> DeleteAsync(int id)
+        public async Task<AppUser> DeleteAsync(int id)
         {
-            var existingUser = await _appDbContext.Users.FindAsync(id);
+            var existingUser = await _appDbContext.AppUsers.Include(x => x.Vehicles).FirstOrDefaultAsync(x => x.Id == id);
 
             if (existingUser is not null)
             {
-                _appDbContext.Users.Remove(existingUser);
+                existingUser.Vehicles.Clear();
+                _appDbContext.AppUsers.Remove(existingUser);
                 await _appDbContext.SaveChangesAsync();
 
                 return existingUser;

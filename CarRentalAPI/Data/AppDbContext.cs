@@ -17,6 +17,8 @@ namespace CarRentalAPI.Data
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Rental> Rentals { get; set; }
 
+        public DbSet<AppUser> AppUsers { get; set; }
+
         public DbSet<Color> Colors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

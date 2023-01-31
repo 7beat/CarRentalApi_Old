@@ -41,27 +41,27 @@ namespace CarRentalAPI.Controllers
             return Ok(userDTO);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddUserAsync([FromBody] Models.DTO.AddUserRequest user)
-        {
-            if (!await ValidateAddUserRequestAsync(user))
-                return BadRequest(ModelState);
+        //[HttpPost]
+        //public async Task<IActionResult> AddUserAsync([FromBody] Models.DTO.AddUserRequest user)
+        //{
+        //    if (!await ValidateAddUserRequestAsync(user))
+        //        return BadRequest(ModelState);
 
-            var userDomain = new Models.Domain.User
-            {
-                Username = user.Username,
-                Email = user.Email,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                BirthDay = user.BirthDay
-            };
+        //    var userDomain = new Models.Domain.User
+        //    {
+        //        Username = user.Username,
+        //        Email = user.Email,
+        //        FirstName = user.FirstName,
+        //        LastName = user.LastName,
+        //        BirthDay = user.BirthDay
+        //    };
 
-            userDomain = await userRepository.AddAsync(userDomain);
+        //    userDomain = await userRepository.AddAsync(userDomain);
 
-            var userDTO = mapper.Map<Models.DTO.User>(userDomain);
+        //    var userDTO = mapper.Map<Models.DTO.User>(userDomain);
 
-            return Ok(userDTO);
-        }
+        //    return Ok(userDTO);
+        //}
 
         [HttpPut]
         [Route("{id:int}")]

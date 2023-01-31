@@ -36,24 +36,17 @@ namespace CarRentalAPI.Repositories
 
         public async Task<bool> ValidateUserAsync(UserLoginDto loginDto)
         {
-            //var user = await _userManager.FindByNameAsync(loginDto.Username);
             _user = await _userManager.FindByNameAsync(loginDto.Username);
             var result = _user != null && await _userManager.CheckPasswordAsync(_user, loginDto.Password);
             return result;
         }
-
-        //public Task<string> CreateTokenAsync()
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         public async Task<string> CreateTokenAsync()
         {
             var signingCredentials = GetSigningCredentials();
             var claims = await GetClaims();
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
-            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-            //return "lol";        
+            return new JwtSecurityTokenHandler().WriteToken(tokenOptions);       
         }
 
         private SigningCredentials GetSigningCredentials()
@@ -91,9 +84,5 @@ namespace CarRentalAPI.Repositories
             return tokenOptions;
         }
 
-        //public Task<IdentityResult> RegisterUserAsync(AppUser userRegistration)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

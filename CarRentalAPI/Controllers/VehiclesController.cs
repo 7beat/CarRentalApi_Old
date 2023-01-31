@@ -26,7 +26,7 @@ namespace CarRentalAPI.Controllers
         {
             var vehiclesDomain = await vehicleRepository.GetAllAsync();
 
-            var vehiclesDTO = mapper.Map<List<Models.DTO.Vehicle>>(vehiclesDomain);
+            var vehiclesDTO = mapper.Map<IEnumerable<Models.DTO.Vehicle>>(vehiclesDomain);
 
             return Ok(vehiclesDTO);
         }

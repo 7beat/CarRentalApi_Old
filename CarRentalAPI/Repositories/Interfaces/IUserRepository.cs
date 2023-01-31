@@ -1,11 +1,12 @@
 ﻿using CarRentalAPI.Data;
 using CarRentalAPI.Models.Domain;
+using CarRentalAPI.Models.Identity;
 
 namespace CarRentalAPI.Repositories.Interfaces
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetAllAsync();
+        Task<IEnumerable<AppUser>> GetAllAsync();
         Task<User> GetByIdAsync(int id);
         Task<User> AddAsync(User user);
         Task<User> UpdateAsync(int id, User user);

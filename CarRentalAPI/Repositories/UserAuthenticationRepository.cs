@@ -60,7 +60,10 @@ namespace CarRentalAPI.Repositories
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, _user.UserName)
+                new Claim(ClaimTypes.Name, _user.UserName),
+                new Claim(ClaimTypes.GivenName, _user.FirstName),
+                new Claim(ClaimTypes.Surname, _user.LastName),
+                new Claim(ClaimTypes.Email, _user.Email),
             };
             var roles = await _userManager.GetRolesAsync(_user);
             foreach (var role in roles)

@@ -9,12 +9,10 @@ namespace CarRentalAPI.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        private readonly AppDbContext _appDbContext;
         private readonly UserManager<AppUser> _userManager;
 
-        public UserRepository(UserManager<AppUser> userManager, AppDbContext appDbContext)
+        public UserRepository(UserManager<AppUser> userManager)
         {
-            _appDbContext = appDbContext;
             _userManager = userManager;
         }
 
@@ -63,20 +61,5 @@ namespace CarRentalAPI.Repositories
 
             return null;
         }
-
-
-
-        //Testing
-        public async Task<bool> IsEmailUnique(string email)
-        {
-            return !await _appDbContext.Users.AnyAsync(x => x.Email == email);
-        }
-
-        public async Task<bool> IsUsernameUnique(string username)
-        {
-            return !await _appDbContext.Users.AnyAsync(x => x.Username == username);
-        }
-
-
     }
 }

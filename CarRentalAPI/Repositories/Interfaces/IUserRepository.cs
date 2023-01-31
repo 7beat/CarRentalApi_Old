@@ -10,7 +10,5 @@ namespace CarRentalAPI.Repositories.Interfaces
         Task<AppUser> GetByIdAsync(int id);
         Task<AppUser> UpdateAsync(int id, UserUpdateDto user);
         Task<AppUser> DeleteAsync(int id);
-        Task<bool> IsEmailUnique(string email);
-        Task<bool> IsUsernameUnique(string username);
     }
 }

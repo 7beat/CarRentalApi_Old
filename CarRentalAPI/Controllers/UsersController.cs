@@ -113,31 +113,5 @@ namespace CarRentalAPI.Controllers
             return Ok(userDTO);
         }
 
-        private async Task<bool> ValidateAddUserRequestAsync(Models.DTO.AddUserRequest user)
-        {
-            if (!await userRepository.IsEmailUnique(user.Email))
-            {
-                ModelState.AddModelError(nameof(user), $"{nameof(user.Email)} is already taken!");
-                return false;
-            }
-
-            if (!await userRepository.IsUsernameUnique(user.Username))
-            {
-                ModelState.AddModelError(nameof(user), $"{nameof(user.Username)} is already taken!");
-                return false;
-            }
-
-            return true;
-        }
-
-        private async Task<bool> ValidateUpdateUserRequestAsync(Models.DTO.UpdateUserRequest updateUser)
-        {
-            if (!await userRepository.IsUsernameUnique(updateUser.Username))
-            {
-                ModelState.AddModelError(nameof(updateUser), $"{nameof(updateUser.Username)} is already taken!");
-                return false;
-            }
-            return true;
-        }
     }
 }

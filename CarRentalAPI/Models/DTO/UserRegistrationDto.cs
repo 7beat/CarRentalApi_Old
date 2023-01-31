@@ -4,9 +4,6 @@ namespace CarRentalAPI.Models.DTO
 {
     public class UserRegistrationDto
     {
-        public string? FirstName { get; init; }
-        public string? LastName { get; init; }
-
         [Required(ErrorMessage = "Username is required")]
         public string? UserName { get; init; }
 
@@ -15,5 +12,8 @@ namespace CarRentalAPI.Models.DTO
 
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; init; }
+        public string? FirstName { get; init; }
+        public string? LastName { get; init; }
+        public DateOnly BirthDay { get; set; }
     }
 }

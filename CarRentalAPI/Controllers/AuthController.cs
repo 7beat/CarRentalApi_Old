@@ -22,7 +22,7 @@ namespace CarRentalAPI.Controllers
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto registerRequest)
         {
             var userResult = await repository.RegisterUserAsync(registerRequest);
-            return !userResult.Succeeded ? new BadRequestObjectResult(userResult) : StatusCode(201);
+            return !userResult.Succeeded ? new BadRequestObjectResult(userResult) : StatusCode(StatusCodes.Status201Created);
         }
 
         [HttpPost]

@@ -2,6 +2,7 @@
 using CarRentalAPI.Models.Domain;
 using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Repositories.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarRentalAPI.Repositories
@@ -9,15 +10,17 @@ namespace CarRentalAPI.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _appDbContext;
+        private readonly UserManager<AppUser> _userManager;
 
-        public UserRepository(AppDbContext appDbContext)
+        public UserRepository(UserManager<AppUser> userManager, AppDbContext appDbContext)
         {
             _appDbContext = appDbContext;
+            _userManager = userManager;
         }
 
         public async Task<IEnumerable<AppUser>> GetAllAsync()
         {
-            return await _appDbContext.AppUsers
+            return await _userManager.Users
                 .Include(x => x.Vehicles)
                 .ThenInclude(x => x.Color)
                 .ToListAsync();
@@ -25,7 +28,7 @@ namespace CarRentalAPI.Repositories
 
         public async Task<AppUser> GetByIdAsync(int id)
         {
-            return await _appDbContext.AppUsers
+            return await _userManager.Users
                 .Include(x => x.Vehicles)
                 .ThenInclude(x => x.Color)
                 .FirstOrDefaultAsync(x => x.Id == id);
@@ -49,14 +52,13 @@ namespace CarRentalAPI.Repositories
 
         public async Task<AppUser> DeleteAsync(int id)
         {
-            var existingUser = await _appDbContext.AppUsers.Include(x => x.Vehicles).FirstOrDefaultAsync(x => x.Id == id);
+            var existingUser = await _userManager.Users.Include(x => x.Vehicles).FirstOrDefaultAsync(x => x.Id == id);
 
             if (existingUser is not null)
             {
                 existingUser.Vehicles.Clear();
-                _appDbContext.AppUsers.Remove(existingUser);
-                await _appDbContext.SaveChangesAsync();
-
+                var result = await _userManager.DeleteAsync(existingUser);
+                
                 return existingUser;
             }
 

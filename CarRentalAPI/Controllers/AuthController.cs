@@ -1,5 +1,6 @@
 ﻿using CarRentalAPI.Models.Domain;
 using CarRentalAPI.Models.DTO;
+using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace CarRentalAPI.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Authenticate([FromBody] Models.DTO.UserLoginDto loginRequest)
+        public async Task<IActionResult> Authenticate([FromBody] UserLoginDto loginRequest)
             => !await repository.ValidateUserAsync(loginRequest) ? Unauthorized() : Ok(new { Token = await repository.CreateTokenAsync() });
 
 

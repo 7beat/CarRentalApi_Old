@@ -117,7 +117,6 @@ namespace CarRentalAPI.Extensions
             {
                 map.AddProfile<UserProfile>();
                 map.AddProfile<VehicleProfile>();
-                map.AddProfile<UserMappingProfile>();
             });
             services.AddSingleton(mapperConfig.CreateMapper());
         }

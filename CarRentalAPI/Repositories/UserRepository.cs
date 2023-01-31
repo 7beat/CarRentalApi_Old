@@ -34,19 +34,18 @@ namespace CarRentalAPI.Repositories
                 .FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<User> UpdateAsync(int id, User user)
+        public async Task<AppUser> UpdateAsync(int id, UserUpdateDto updateUser)
         {
-            var existingUser = await _appDbContext.Users.FindAsync(id);
+            var existingUser = await _userManager.FindByIdAsync(id.ToString());
 
             if (existingUser is null)
                 return null;
 
-            existingUser.Username = user.Username;
-            existingUser.FirstName= user.FirstName;
-            existingUser.LastName= user.LastName;
-            existingUser.BirthDay= user.BirthDay;
+            existingUser.FirstName = updateUser.FirstName;
+            existingUser.LastName = updateUser.LastName;
+            //existingUser.Birthday= user.Birthday;
 
-            await _appDbContext.SaveChangesAsync();
+            var result = await _userManager.UpdateAsync(existingUser);
             return existingUser;
         }
 
@@ -65,6 +64,8 @@ namespace CarRentalAPI.Repositories
             return null;
         }
 
+
+
         //Testing
         public async Task<bool> IsEmailUnique(string email)
         {
@@ -75,5 +76,7 @@ namespace CarRentalAPI.Repositories
         {
             return !await _appDbContext.Users.AnyAsync(x => x.Username == username);
         }
+
+
     }
 }

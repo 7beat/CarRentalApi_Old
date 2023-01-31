@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarRentalAPI.Models.Domain;
 using CarRentalAPI.Models.DTO;
+using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -63,30 +64,40 @@ namespace CarRentalAPI.Controllers
         //    return Ok(userDTO);
         //}
 
+        //[HttpPut]
+        //[Route("{id:int}")]
+        //public async Task<IActionResult> UpdateUserAsync(int id,
+        //    Models.DTO.UpdateUserRequest updateUserRequest)
+        //{
+        //    if (!await ValidateUpdateUserRequestAsync(updateUserRequest))
+        //        return BadRequest(ModelState);
+
+        //    var userDomain = new Models.Domain.User
+        //    {
+        //        Username = updateUserRequest.Username,
+        //        FirstName = updateUserRequest.FirstName,
+        //        LastName = updateUserRequest.LastName,
+        //        BirthDay = updateUserRequest.BirthDay
+        //    };
+
+        //    userDomain = await userRepository.UpdateAsync(id, userDomain);
+
+        //    if (userDomain is null)
+        //        return NotFound();
+
+        //    var userDTO = mapper.Map<Models.DTO.User>(userDomain);
+
+        //    return Ok(userDTO);
+        //}
+
         [HttpPut]
         [Route("{id:int}")]
-        public async Task<IActionResult> UpdateUserAsync(int id,
-            Models.DTO.UpdateUserRequest updateUserRequest)
+        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto updateRequest)
         {
-            if (!await ValidateUpdateUserRequestAsync(updateUserRequest))
-                return BadRequest(ModelState);
-
-            var userDomain = new Models.Domain.User
-            {
-                Username = updateUserRequest.Username,
-                FirstName = updateUserRequest.FirstName,
-                LastName = updateUserRequest.LastName,
-                BirthDay = updateUserRequest.BirthDay
-            };
-
-            userDomain = await userRepository.UpdateAsync(id, userDomain);
-
-            if (userDomain is null)
-                return NotFound();
-
-            var userDTO = mapper.Map<Models.DTO.User>(userDomain);
-
-            return Ok(userDTO);
+            var user = await userRepository.UpdateAsync(id, updateRequest);
+            
+            var userDto = mapper.Map<Models.DTO.User>(user);
+            return Ok(userDto);
         }
 
         [HttpDelete]

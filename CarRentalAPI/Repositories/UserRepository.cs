@@ -15,14 +15,6 @@ namespace CarRentalAPI.Repositories
             _appDbContext = appDbContext;
         }
 
-        public async Task<User> AddAsync(User user)
-        {
-            await _appDbContext.Users.AddAsync(user);
-            await _appDbContext.SaveChangesAsync();
-            //var test = _appDbContext;
-            return await GetByIdAsync(user.Id);
-        }
-
         public async Task<IEnumerable<AppUser>> GetAllAsync()
         {
             return await _appDbContext.AppUsers
@@ -31,9 +23,9 @@ namespace CarRentalAPI.Repositories
                 .ToListAsync();
         }
 
-        public async Task<User> GetByIdAsync(int id)
+        public async Task<AppUser> GetByIdAsync(int id)
         {
-            return await _appDbContext.Users
+            return await _appDbContext.AppUsers
                 .Include(x => x.Vehicles)
                 .ThenInclude(x => x.Color)
                 .FirstOrDefaultAsync(x => x.Id == id);

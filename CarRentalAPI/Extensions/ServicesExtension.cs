@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarRentalAPI.Data;
+using CarRentalAPI.Models.Domain;
 using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Profiles;
 using CarRentalAPI.Repositories;
@@ -126,6 +127,7 @@ namespace CarRentalAPI.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IUserAuthenticationRepository, UserAuthenticationRepository>();
+            services.AddScoped<IRentalRepository, RentalRepository>();
         }
 
         public static void ConfigureFluentValidation(this IServiceCollection services)

@@ -22,9 +22,21 @@ namespace CarRentalAPI.Controllers
         {
             var rentalsDomain = await rentalRepository.GetAllAsync();
 
-
-
             var rentalsDto = mapper.Map<IEnumerable<Models.DTO.Rental>>(rentalsDomain);
+
+            return Ok(rentalsDto);
+        }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetRentalById(int id)
+        {
+            var rentalDomain = await rentalRepository.GetByIdAsync(id);
+
+            if (rentalDomain is null)
+                return NotFound();
+
+            var rentalsDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
 
             return Ok(rentalsDto);
         }

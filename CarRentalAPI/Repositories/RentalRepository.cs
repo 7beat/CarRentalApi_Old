@@ -12,6 +12,7 @@ namespace CarRentalAPI.Repositories
         {
             _appDbContext = appContext;
         }
+
         public async Task<IEnumerable<Rental>> GetAllAsync()
         {
             return await _appDbContext.Rentals
@@ -27,6 +28,14 @@ namespace CarRentalAPI.Repositories
                 .Include(x => x.Vehicle)
                 .ThenInclude(x => x.Color)
                 .FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<Rental> AddAsync(Rental rental)
+        {
+            var addedRental = await _appDbContext.Rentals.AddAsync(rental);
+            await _appDbContext.SaveChangesAsync();
+
+            return await GetByIdAsync(rental.Id);
         }
     }
 }

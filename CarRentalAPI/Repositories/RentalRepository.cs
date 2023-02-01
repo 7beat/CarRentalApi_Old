@@ -42,20 +42,6 @@ namespace CarRentalAPI.Repositories
             return await GetByIdAsync(rental.Id);
         }
 
-        private bool ValidateRentalDate(Rental newRental)
-        {
-            foreach (var item in _appDbContext.Rentals.Where(x => x.Vehicle.Id == newRental.VehicleId)) //daje wszystkie rentale danego auta
-            {
-                //Czy start nowego rentala znajduje się pomiędzy Startem i endem jakiegoś innego? jeśli nie to true
-                if (!newRental.StartDate.IsInRange(item.StartDate, item.EndDate))
-                {
-                    //Nie koliduje
-                    return true;
-                }
-            }
 
-            //Koliduje z czymś
-            return false;
-        }
     }
 }

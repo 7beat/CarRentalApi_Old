@@ -29,6 +29,7 @@ namespace CarRentalAPI.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
+        [ActionName("GetRentalById")]
         public async Task<IActionResult> GetRentalById(int id)
         {
             var rentalDomain = await rentalRepository.GetByIdAsync(id);
@@ -39,6 +40,24 @@ namespace CarRentalAPI.Controllers
             var rentalsDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
 
             return Ok(rentalsDto);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRental([FromBody] Models.DTO.RentalAddRequest rentalAddRequest)
+        {
+            var rentalDomain = new Models.Domain.Rental
+            {
+                UserId= rentalAddRequest.UserId,
+                VehicleId= rentalAddRequest.VehicleId,
+                StartDate= rentalAddRequest.StartDate,
+                EndDate= rentalAddRequest.EndDate
+            };
+
+            rentalDomain = await rentalRepository.AddAsync(rentalDomain);
+
+            var rentalDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
+
+            return CreatedAtAction(nameof(GetRentalById), new { id = rentalDto.Id }, rentalDto);
         }
     }
 }

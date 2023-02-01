@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CarRentalAPI.Data;
+using CarRentalAPI.Mappings;
 using CarRentalAPI.Models.Domain;
 using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Profiles;
@@ -118,6 +119,7 @@ namespace CarRentalAPI.Extensions
             {
                 map.AddProfile<UserProfile>();
                 map.AddProfile<VehicleProfile>();
+                map.AddProfile<RentalProfile>();
             });
             services.AddSingleton(mapperConfig.CreateMapper());
         }

@@ -1,4 +1,5 @@
 ﻿using CarRentalAPI.Data;
+using CarRentalAPI.Extensions;
 using CarRentalAPI.Models.Domain;
 using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +33,8 @@ namespace CarRentalAPI.Repositories
 
         public async Task<Rental> AddAsync(Rental rental)
         {
-
+            if (!ValidateRentalDate(rental))
+                return null;
 
             var addedRental = await _appDbContext.Rentals.AddAsync(rental);
             await _appDbContext.SaveChangesAsync();
@@ -40,15 +42,20 @@ namespace CarRentalAPI.Repositories
             return await GetByIdAsync(rental.Id);
         }
 
-        private bool ValidateDate(DateOnly newRentalStart)
+        private bool ValidateRentalDate(Rental newRental)
         {
-            //IsInRange
-            foreach (var item in _appDbContext.Rentals)
+            foreach (var item in _appDbContext.Rentals.Where(x => x.Vehicle.Id == newRental.VehicleId)) //daje wszystkie rentale danego auta
             {
-                item.
+                //Czy start nowego rentala znajduje się pomiędzy Startem i endem jakiegoś innego? jeśli nie to true
+                if (!newRental.StartDate.IsInRange(item.StartDate, item.EndDate))
+                {
+                    //Nie koliduje
+                    return true;
+                }
             }
 
-            return true;
+            //Koliduje z czymś
+            return false;
         }
     }
 }

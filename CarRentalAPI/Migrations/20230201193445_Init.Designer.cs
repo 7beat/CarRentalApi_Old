@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRentalAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230131113812_Init")]
+    [Migration("20230201193445_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -64,37 +64,6 @@ namespace CarRentalAPI.Migrations
                     b.ToTable("Rentals");
                 });
 
-            modelBuilder.Entity("CarRentalAPI.Models.Domain.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateOnly>("BirthDay")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("varchar(30)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("CarRentalAPI.Models.Domain.Vehicle", b =>
                 {
                     b.Property<int>("Id")
@@ -102,7 +71,8 @@ namespace CarRentalAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("AppUserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasColumnName("UserId");
 
                     b.Property<string>("Brand")
                         .IsRequired()
@@ -115,9 +85,6 @@ namespace CarRentalAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.Property<DateOnly>("YearOfProduction")
                         .HasColumnType("date");
 
@@ -126,8 +93,6 @@ namespace CarRentalAPI.Migrations
                     b.HasIndex("AppUserId");
 
                     b.HasIndex("ColorId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Vehicles");
                 });
@@ -336,7 +301,7 @@ namespace CarRentalAPI.Migrations
 
             modelBuilder.Entity("CarRentalAPI.Models.Domain.Rental", b =>
                 {
-                    b.HasOne("CarRentalAPI.Models.Domain.User", "User")
+                    b.HasOne("CarRentalAPI.Models.Identity.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -364,10 +329,6 @@ namespace CarRentalAPI.Migrations
                         .HasForeignKey("ColorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("CarRentalAPI.Models.Domain.User", null)
-                        .WithMany("Vehicles")
-                        .HasForeignKey("UserId");
 
                     b.Navigation("Color");
                 });
@@ -421,11 +382,6 @@ namespace CarRentalAPI.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("CarRentalAPI.Models.Domain.User", b =>
-                {
-                    b.Navigation("Vehicles");
                 });
 
             modelBuilder.Entity("CarRentalAPI.Models.Identity.AppUser", b =>

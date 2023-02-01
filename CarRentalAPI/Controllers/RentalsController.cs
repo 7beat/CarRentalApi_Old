@@ -55,6 +55,9 @@ namespace CarRentalAPI.Controllers
 
             rentalDomain = await rentalRepository.AddAsync(rentalDomain);
 
+            if (rentalDomain is null)
+                return BadRequest();
+
             var rentalDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
 
             return CreatedAtAction(nameof(GetRentalById), new { id = rentalDto.Id }, rentalDto);

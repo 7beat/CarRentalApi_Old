@@ -33,9 +33,6 @@ namespace CarRentalAPI.Repositories
 
         public async Task<Rental> AddAsync(Rental rental)
         {
-            if (!ValidateRentalDate(rental))
-                return null;
-
             var addedRental = await _appDbContext.Rentals.AddAsync(rental);
             await _appDbContext.SaveChangesAsync();
 

@@ -59,7 +59,7 @@ namespace CarRentalAPI.Controllers
                 EndDate= rentalAddRequest.EndDate
             };
 
-            if (!ValidateRentalDate(rentalDomain))
+            if (!ValidateAddRental(rentalDomain))
                 return BadRequest(ModelState);
 
             rentalDomain = await rentalRepository.AddAsync(rentalDomain);
@@ -72,8 +72,20 @@ namespace CarRentalAPI.Controllers
             return CreatedAtAction(nameof(GetRentalById), new { id = rentalDto.Id }, rentalDto);
         }
 
-        private bool ValidateRentalDate(Models.Domain.Rental newRental)
+        private bool ValidateAddRental(Models.Domain.Rental newRental)
         {
+            if (newRental.UserId <= 0)
+            {
+                ModelState.AddModelError(nameof(newRental), $"{nameof(newRental.UserId)} needs to be specified.");
+                return false;
+            }
+
+            if (newRental.VehicleId <= 0)
+            {
+                ModelState.AddModelError(nameof(newRental), $"{nameof(newRental.VehicleId)} needs to be specified.");
+                return false;
+            }
+
             foreach (var item in _appDbContext.Rentals.Where(x => x.Vehicle.Id == newRental.VehicleId)) // All rentals of given car
             {
                 // Is a start or end of new rental beetwen start and end of existing one?

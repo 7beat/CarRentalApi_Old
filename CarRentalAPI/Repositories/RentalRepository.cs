@@ -32,10 +32,23 @@ namespace CarRentalAPI.Repositories
 
         public async Task<Rental> AddAsync(Rental rental)
         {
+
+
             var addedRental = await _appDbContext.Rentals.AddAsync(rental);
             await _appDbContext.SaveChangesAsync();
 
             return await GetByIdAsync(rental.Id);
+        }
+
+        private bool ValidateDate(DateOnly newRentalStart)
+        {
+            //IsInRange
+            foreach (var item in _appDbContext.Rentals)
+            {
+                item.
+            }
+
+            return true;
         }
     }
 }

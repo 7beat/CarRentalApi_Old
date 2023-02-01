@@ -1,4 +1,7 @@
 ﻿using AutoMapper;
+using CarRentalAPI.Data;
+using CarRentalAPI.Extensions;
+using CarRentalAPI.Models.DTO;
 using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,11 +12,13 @@ namespace CarRentalAPI.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
+        private readonly AppDbContext _appDbContext;
         private readonly IRentalRepository rentalRepository;
         private readonly IMapper mapper;
-        public RentalsController(IRentalRepository repository, IMapper mapper) 
+        public RentalsController(AppDbContext appDbContext, IRentalRepository repository, IMapper mapper) 
         {
-            this.rentalRepository = repository;
+            _appDbContext = appDbContext;
+            rentalRepository = repository;
             this.mapper = mapper;
         }
 
@@ -45,6 +50,7 @@ namespace CarRentalAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRental([FromBody] Models.DTO.RentalAddRequest rentalAddRequest)
         {
+
             var rentalDomain = new Models.Domain.Rental
             {
                 UserId= rentalAddRequest.UserId,
@@ -52,6 +58,9 @@ namespace CarRentalAPI.Controllers
                 StartDate= rentalAddRequest.StartDate,
                 EndDate= rentalAddRequest.EndDate
             };
+
+            if (!ValidateRentalDate(rentalDomain))
+                return BadRequest(ModelState);
 
             rentalDomain = await rentalRepository.AddAsync(rentalDomain);
 
@@ -61,6 +70,22 @@ namespace CarRentalAPI.Controllers
             var rentalDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
 
             return CreatedAtAction(nameof(GetRentalById), new { id = rentalDto.Id }, rentalDto);
+        }
+
+        private bool ValidateRentalDate(Models.Domain.Rental newRental)
+        {
+            foreach (var item in _appDbContext.Rentals.Where(x => x.Vehicle.Id == newRental.VehicleId)) // All rentals of given car
+            {
+                // Is a start or end of new rental beetwen start and end of existing one?
+                if (newRental.StartDate.IsInRange(item.StartDate, item.EndDate) || newRental.EndDate.IsInRange(item.StartDate, item.EndDate))
+                {
+                    // Dates are coliding
+                    ModelState.AddModelError(nameof(newRental), $"Dates are coliding with {item.Id}");
+                }
+            }
+
+            // Result
+            return ModelState.ErrorCount > 0 ? false : true;
         }
     }
 }

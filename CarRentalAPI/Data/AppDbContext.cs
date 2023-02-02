@@ -22,6 +22,7 @@ namespace CarRentalAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Vehicle>().Property(x => x.AppUserId).HasColumnName("UserId");
             //modelBuilder.Entity<User>().HasIndex(x => x.Email).IsUnique();
             //modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
         }

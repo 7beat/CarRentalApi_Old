@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using CarRentalAPI.Data;
+using CarRentalAPI.Mappings;
+using CarRentalAPI.Models.Domain;
 using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Profiles;
 using CarRentalAPI.Repositories;
@@ -117,6 +119,7 @@ namespace CarRentalAPI.Extensions
             {
                 map.AddProfile<UserProfile>();
                 map.AddProfile<VehicleProfile>();
+                map.AddProfile<RentalProfile>();
             });
             services.AddSingleton(mapperConfig.CreateMapper());
         }
@@ -126,6 +129,7 @@ namespace CarRentalAPI.Extensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IUserAuthenticationRepository, UserAuthenticationRepository>();
+            services.AddScoped<IRentalRepository, RentalRepository>();
         }
 
         public static void ConfigureFluentValidation(this IServiceCollection services)

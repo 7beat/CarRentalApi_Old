@@ -76,6 +76,8 @@ namespace CarRentalAPI.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> UpdateRental(int id, [FromBody] Models.DTO.RentalUpdateRequest rentalAddRequest)
         {
+            if (!ValidateUpdateRental(id, rentalAddRequest))
+                return BadRequest(ModelState);
 
             var rentalDomain = new Models.Domain.Rental
             {
@@ -86,8 +88,8 @@ namespace CarRentalAPI.Controllers
             //var test = ValidateUpdateRental(rentalDomain);
             //true
 
-            if (!ValidateUpdateRental(id, rentalDomain))
-                return BadRequest(ModelState);
+            //if (!ValidateUpdateRental(id, rentalDomain))
+            //    return BadRequest(ModelState);
 
             rentalDomain = await rentalRepository.UpdateAsync(id, rentalDomain);
 
@@ -140,7 +142,7 @@ namespace CarRentalAPI.Controllers
             return ModelState.ErrorCount > 0 ? false : true;
         }
 
-        private bool ValidateUpdateRental(int id, Models.Domain.Rental newRental)
+        private bool ValidateUpdateRental(int id, Models.DTO.RentalUpdateRequest newRental)
         {
             var newRentalId = _appDbContext.Rentals.Find(id);
 

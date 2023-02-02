@@ -113,6 +113,12 @@ namespace CarRentalAPI.Controllers
                 return false;
             }
 
+            if (newRental.StartDate.Day > DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month))
+            {
+                ModelState.AddModelError(nameof(newRental), $"{nameof(newRental.StartDate)} needs to be proper day of a month.");
+                return false;
+            }
+
             foreach (var item in _appDbContext.Rentals.Where(x => x.Vehicle.Id == newRental.VehicleId)) // All rentals of given car
             {
                 // Is a start or end of new rental between start and end of existing one?

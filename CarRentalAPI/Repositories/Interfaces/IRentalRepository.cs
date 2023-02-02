@@ -7,5 +7,6 @@ namespace CarRentalAPI.Repositories.Interfaces
         Task<IEnumerable<Rental>> GetAllAsync();
         Task<Rental> GetByIdAsync(int id);
         Task<Rental> AddAsync(Rental rental);
+        Task<Rental> UpdateAsync(int id, Rental rental);
     }
 }

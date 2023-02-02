@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRentalAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230201193445_Init")]
-    partial class Init
+    [Migration("20230202222829_newVehicle")]
+    partial class newVehicle
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,6 +35,18 @@ namespace CarRentalAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Colors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Black"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "White"
+                        });
                 });
 
             modelBuilder.Entity("CarRentalAPI.Models.Domain.Rental", b =>
@@ -95,6 +107,32 @@ namespace CarRentalAPI.Migrations
                     b.HasIndex("ColorId");
 
                     b.ToTable("Vehicles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Brand = "Ford",
+                            ColorId = 1,
+                            Model = "Mondeo",
+                            YearOfProduction = new DateOnly(2017, 2, 15)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Brand = "Mercedes",
+                            ColorId = 1,
+                            Model = "GLC",
+                            YearOfProduction = new DateOnly(2019, 6, 8)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Brand = "Honda",
+                            ColorId = 2,
+                            Model = "Civic",
+                            YearOfProduction = new DateOnly(2008, 8, 21)
+                        });
                 });
 
             modelBuilder.Entity("CarRentalAPI.Models.Identity.AppUser", b =>

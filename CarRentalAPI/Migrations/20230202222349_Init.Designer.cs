@@ -3,6 +3,7 @@ using System;
 using CarRentalAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRentalAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230202222349_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,14 +124,6 @@ namespace CarRentalAPI.Migrations
                             ColorId = 1,
                             Model = "GLC",
                             YearOfProduction = new DateOnly(2019, 6, 8)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Brand = "Honda",
-                            ColorId = 2,
-                            Model = "Civic",
-                            YearOfProduction = new DateOnly(2008, 8, 21)
                         });
                 });
 

@@ -53,5 +53,19 @@ namespace CarRentalAPI.Repositories
             await _appDbContext.SaveChangesAsync();
             return existingRental;
         }
+
+        public async Task<Rental> DeleteAsync(int id)
+        {
+            var existingRental = await _appDbContext.Rentals.FindAsync(id);
+
+            if (existingRental is not null)
+            {
+                _appDbContext.Rentals.Remove(existingRental);
+                await _appDbContext.SaveChangesAsync();
+
+                return existingRental;
+            }
+            return null;
+        }
     }
 }

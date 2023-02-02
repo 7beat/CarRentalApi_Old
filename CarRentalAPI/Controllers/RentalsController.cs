@@ -121,6 +121,13 @@ namespace CarRentalAPI.Controllers
                     // Dates are coliding
                     ModelState.AddModelError(nameof(newRental), $"Dates are coliding with {item.Id}");
                 }
+
+                // Is a start or end of existing rental beetwen start and end of new one? New Rental cant happen while existing rental is happening!
+                if (item.StartDate.IsInRange(newRental.StartDate, newRental.EndDate) || item.EndDate.IsInRange(newRental.StartDate, newRental.EndDate))
+                {
+                    // Dates are coliding, new rental is trying to be inserted over existing one!
+                    ModelState.AddModelError(nameof(newRental), $"Dates are coliding with {item.Id}");
+                }
             }
 
             // Result

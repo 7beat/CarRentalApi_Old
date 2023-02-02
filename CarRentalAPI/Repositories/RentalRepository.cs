@@ -39,6 +39,19 @@ namespace CarRentalAPI.Repositories
             return await GetByIdAsync(rental.Id);
         }
 
+        public async Task<Rental> UpdateAsync(int id, Rental rental)
+        {
+            var existingRental = await _appDbContext.Rentals.FindAsync(id);
 
+            if (existingRental is null)
+            {
+                return null;
+            }
+
+            existingRental.StartDate = rental.StartDate;
+            existingRental.EndDate= rental.EndDate;
+            await _appDbContext.SaveChangesAsync();
+            return existingRental;
+        }
     }
 }

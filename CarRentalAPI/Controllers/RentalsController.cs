@@ -115,14 +115,14 @@ namespace CarRentalAPI.Controllers
 
             foreach (var item in _appDbContext.Rentals.Where(x => x.Vehicle.Id == newRental.VehicleId)) // All rentals of given car
             {
-                // Is a start or end of new rental beetwen start and end of existing one?
+                // Is a start or end of new rental between start and end of existing one?
                 if (newRental.StartDate.IsInRange(item.StartDate, item.EndDate) || newRental.EndDate.IsInRange(item.StartDate, item.EndDate))
                 {
                     // Dates are coliding
                     ModelState.AddModelError(nameof(newRental), $"Dates are coliding with {item.Id}");
                 }
 
-                // Is a start or end of existing rental beetwen start and end of new one? New Rental cant happen while existing rental is happening!
+                // Is a start or end of existing rental between start and end of new one? New Rental cant happen while existing rental is happening!
                 if (item.StartDate.IsInRange(newRental.StartDate, newRental.EndDate) || item.EndDate.IsInRange(newRental.StartDate, newRental.EndDate))
                 {
                     // Dates are coliding, new rental is trying to be inserted over existing one!
@@ -141,7 +141,7 @@ namespace CarRentalAPI.Controllers
             // All rentals of given car excluding the modified one!
             foreach (var item in _appDbContext.Rentals.Where(x => x.Vehicle.Id == newRentalId.VehicleId && x.Id != newRentalId.Id))
             {
-                // Is a start or end of new rental beetwen start and end of existing one? New Rental cant start if the car is already rented!
+                // Is a start or end of new rental between start and end of existing one? New Rental cant start if the car is already rented!
                 if (newRental.StartDate.IsInRange(item.StartDate, item.EndDate) || newRental.EndDate.IsInRange(item.StartDate, item.EndDate))
                 {
                     // Dates are coliding

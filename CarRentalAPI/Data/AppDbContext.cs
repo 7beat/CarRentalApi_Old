@@ -27,6 +27,7 @@ namespace CarRentalAPI.Data
             //modelBuilder.Entity<User>().HasIndex(x => x.Username).IsUnique();
             modelBuilder.ApplyConfiguration(new ColorData());
             modelBuilder.ApplyConfiguration(new VehicleData());
+            modelBuilder.ApplyConfiguration(new RoleData());
         }
     }
 }

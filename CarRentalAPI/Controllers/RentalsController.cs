@@ -50,6 +50,8 @@ namespace CarRentalAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRental([FromBody] Models.DTO.RentalAddRequest rentalAddRequest)
         {
+            if (!ValidateAddRental(rentalAddRequest))
+                return BadRequest(ModelState);
 
             var rentalDomain = new Models.Domain.Rental
             {
@@ -58,9 +60,6 @@ namespace CarRentalAPI.Controllers
                 StartDate= rentalAddRequest.StartDate,
                 EndDate= rentalAddRequest.EndDate
             };
-
-            if (!ValidateAddRental(rentalDomain))
-                return BadRequest(ModelState);
 
             rentalDomain = await rentalRepository.AddAsync(rentalDomain);
 
@@ -95,7 +94,7 @@ namespace CarRentalAPI.Controllers
             return CreatedAtAction(nameof(GetRentalById), new { id = rentalDto.Id }, rentalDto);
         }
 
-        private bool ValidateAddRental(Models.Domain.Rental newRental)
+        private bool ValidateAddRental(Models.DTO.RentalAddRequest newRental)
         {
             if (newRental.UserId <= 0)
             {

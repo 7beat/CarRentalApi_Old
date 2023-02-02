@@ -85,12 +85,6 @@ namespace CarRentalAPI.Controllers
                 EndDate = rentalAddRequest.EndDate
             };
 
-            //var test = ValidateUpdateRental(rentalDomain);
-            //true
-
-            //if (!ValidateUpdateRental(id, rentalDomain))
-            //    return BadRequest(ModelState);
-
             rentalDomain = await rentalRepository.UpdateAsync(id, rentalDomain);
 
             if (rentalDomain is null)

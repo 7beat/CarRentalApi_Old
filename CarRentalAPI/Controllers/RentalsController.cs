@@ -91,7 +91,20 @@ namespace CarRentalAPI.Controllers
 
             var rentalDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
 
-            return CreatedAtAction(nameof(GetRentalById), new { id = rentalDto.Id }, rentalDto);
+            return Ok(rentalDto);
+        }
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public async Task<IActionResult> DeteleRental(int id)
+        {
+            var rentalDomain = await rentalRepository.DeleteAsync(id);
+
+            if (rentalDomain is null)
+                return NotFound();
+
+            var rentalDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
+            return Ok(rentalDto);
         }
 
         private bool ValidateAddRental(Models.DTO.RentalAddRequest newRental)
@@ -105,12 +118,6 @@ namespace CarRentalAPI.Controllers
             if (newRental.VehicleId <= 0)
             {
                 ModelState.AddModelError(nameof(newRental), $"{nameof(newRental.VehicleId)} needs to be specified.");
-                return false;
-            }
-
-            if (newRental.StartDate.Day > DateTime.DaysInMonth(DateTime.Today.Year, DateTime.Today.Month))
-            {
-                ModelState.AddModelError(nameof(newRental), $"{nameof(newRental.StartDate)} needs to be proper day of a month.");
                 return false;
             }
 

@@ -15,7 +15,7 @@ namespace CarRentalAPI.Controllers
         private readonly AppDbContext _appDbContext;
         private readonly IRentalRepository rentalRepository;
         private readonly IMapper mapper;
-        public RentalsController(AppDbContext appDbContext, IRentalRepository repository, IMapper mapper) 
+        public RentalsController(AppDbContext appDbContext, IRentalRepository repository, IMapper mapper)
         {
             _appDbContext = appDbContext;
             rentalRepository = repository;

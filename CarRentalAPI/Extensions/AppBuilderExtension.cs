@@ -8,6 +8,13 @@ namespace CarRentalAPI.Extensions
 {
     public static class AppBuilderExtension
     {
+        /// <summary>
+        /// Seeds related IdentityUsers and Roles in DataBase
+        /// </summary>
+        /// <example>AAA BBB</example>
+        /// <remarks>Default Accounts: Admin, User. Password = Password123!</remarks>
+        /// <param name="app"></param>
+        /// <returns></returns>
         public static async Task SeedIdentityDb(this IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())

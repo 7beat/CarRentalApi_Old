@@ -38,13 +38,8 @@ builder.Services.ConfigureFluentValidation();
 
 var app = builder.Build();
 
-
-//WIP
-await DbInitializer.SeedUsers(app);
-
-await app.SeedUsers3();
-
-
+// WIP
+await app.SeedIdentityDb();
 
 
 if (app.Environment.IsDevelopment())

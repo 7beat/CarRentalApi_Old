@@ -17,11 +17,10 @@ namespace CarRentalAPI.Extensions
                 using (var context = new AppDbContext(
                 scope.ServiceProvider.GetRequiredService<DbContextOptions<AppDbContext>>()))
                 {
-                    var adminUser = await EnsureUser(serviceProvider, "TestUser", "Test123123!");
+                    var adminUser = await EnsureUser(serviceProvider, "Admin", "Password123!");
                     await EnsureRole(serviceProvider, adminUser, "Admin");
 
-                    // guestUser?
-                    var normalUser = await EnsureUser(serviceProvider, "TestUser2", "Test123123!");
+                    var normalUser = await EnsureUser(serviceProvider, "User", "Password123!");
                     await EnsureRole(serviceProvider, normalUser, "User");
                 }
             }
@@ -35,7 +34,7 @@ namespace CarRentalAPI.Extensions
 
             var user = await userManager.FindByNameAsync(userName);
 
-            // Creating new user from scratch
+            // Creating new user
             if (user is null)
             {
                 user = new AppUser
@@ -43,8 +42,8 @@ namespace CarRentalAPI.Extensions
                     UserName = userName,
                     Email = userName + "@gmail.com",
                     EmailConfirmed = true,
-                    FirstName = userName,
-                    LastName = userName,
+                    FirstName = "John",
+                    LastName = "Doe",
                     Birthday = new(1999, 06, 08)
                 };
 

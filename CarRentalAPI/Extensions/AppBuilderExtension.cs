@@ -11,7 +11,6 @@ namespace CarRentalAPI.Extensions
         /// <summary>
         /// Seeds related IdentityUsers and Roles in DataBase
         /// </summary>
-        /// <example>AAA BBB</example>
         /// <remarks>Default Accounts: Admin, User. Password = Password123!</remarks>
         /// <param name="app"></param>
         /// <returns></returns>

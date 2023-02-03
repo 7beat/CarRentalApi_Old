@@ -22,8 +22,6 @@ namespace CarRentalAPI.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Vehicle>().Property(x => x.AppUserId).HasColumnName("UserId");
-
             modelBuilder.ApplyConfiguration(new ColorData());
             modelBuilder.ApplyConfiguration(new VehicleData());
         }

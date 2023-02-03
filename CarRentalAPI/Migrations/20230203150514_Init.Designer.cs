@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRentalAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230203020614_Init")]
+    [Migration("20230203150514_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -82,10 +82,6 @@ namespace CarRentalAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("AppUserId")
-                        .HasColumnType("int")
-                        .HasColumnName("UserId");
-
                     b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -97,14 +93,18 @@ namespace CarRentalAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("UserId");
+
                     b.Property<DateOnly>("YearOfProduction")
                         .HasColumnType("date");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
-
                     b.HasIndex("ColorId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Vehicles");
 
@@ -358,15 +358,17 @@ namespace CarRentalAPI.Migrations
 
             modelBuilder.Entity("CarRentalAPI.Models.Domain.Vehicle", b =>
                 {
-                    b.HasOne("CarRentalAPI.Models.Identity.AppUser", null)
-                        .WithMany("Vehicles")
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("CarRentalAPI.Models.Domain.Color", "Color")
                         .WithMany()
                         .HasForeignKey("ColorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("CarRentalAPI.Models.Identity.AppUser", "AppUser")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("AppUser");
 
                     b.Navigation("Color");
                 });

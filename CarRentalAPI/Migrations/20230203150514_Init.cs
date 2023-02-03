@@ -283,12 +283,12 @@ namespace CarRentalAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Vehicles",
-                columns: new[] { "Id", "UserId", "Brand", "ColorId", "Model", "YearOfProduction" },
+                columns: new[] { "Id", "Brand", "ColorId", "Model", "UserId", "YearOfProduction" },
                 values: new object[,]
                 {
-                    { 1, null, "Ford", 1, "Mondeo", new DateOnly(2017, 2, 15) },
-                    { 2, null, "Mercedes", 1, "GLC", new DateOnly(2019, 6, 8) },
-                    { 3, null, "Honda", 2, "Civic", new DateOnly(2008, 8, 21) }
+                    { 1, "Ford", 1, "Mondeo", null, new DateOnly(2017, 2, 15) },
+                    { 2, "Mercedes", 1, "GLC", null, new DateOnly(2019, 6, 8) },
+                    { 3, "Honda", 2, "Civic", null, new DateOnly(2008, 8, 21) }
                 });
 
             migrationBuilder.CreateIndex(

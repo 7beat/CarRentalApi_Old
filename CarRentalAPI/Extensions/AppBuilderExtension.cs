@@ -8,7 +8,7 @@ namespace CarRentalAPI.Extensions
 {
     public static class AppBuilderExtension
     {
-        public static async Task SeedIdentityDb(this IApplicationBuilder app) // SeedIdentityDb
+        public static async Task SeedIdentityDb(this IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {

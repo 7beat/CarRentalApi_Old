@@ -6,13 +6,16 @@ using Microsoft.VisualBasic;
 
 namespace CarRentalAPI.Extensions
 {
+    /// <summary>
+    /// Extension methods for <see cref="IApplicationBuilder"/>
+    /// </summary>
     public static class AppBuilderExtension
     {
         /// <summary>
-        /// Seeds related IdentityUsers and Roles in DataBase
+        /// Seeds related IdentityUsers of type <see cref="Models.Identity.AppUser"/> and Roles in DataBase
         /// </summary>
         /// <remarks>Default Accounts: Admin, User. Password = Password123!</remarks>
-        /// <param name="app"></param>
+        /// <param name="app">An instance of <see cref="IApplicationBuilder"/>.</param>
         /// <returns></returns>
         public static async Task SeedIdentityDb(this IApplicationBuilder app)
         {

@@ -64,7 +64,7 @@ namespace CarRentalAPI.Extensions
 
             IdentityResult ir;
 
-            if (await roleManager.RoleExistsAsync(role) == false)
+            if (!await roleManager.RoleExistsAsync(role))
             {
                 ir = await roleManager.CreateAsync(new(role));
             }

@@ -287,7 +287,8 @@ namespace CarRentalAPI.Migrations
                 values: new object[,]
                 {
                     { 1, null, "Ford", 1, "Mondeo", new DateOnly(2017, 2, 15) },
-                    { 2, null, "Mercedes", 1, "GLC", new DateOnly(2019, 6, 8) }
+                    { 2, null, "Mercedes", 1, "GLC", new DateOnly(2019, 6, 8) },
+                    { 3, null, "Honda", 2, "Civic", new DateOnly(2008, 8, 21) }
                 });
 
             migrationBuilder.CreateIndex(

@@ -8,7 +8,7 @@
         /// <param name="now"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        /// <returns>true if given date happens to be in range of two other dates</returns>
+        /// <returns>True if given date happens to be in range of two other dates, otherwise false.</returns>
         public static bool IsInRange(this DateOnly now, DateOnly start, DateOnly end)
         {
             return now >= start && now <= end;

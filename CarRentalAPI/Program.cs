@@ -1,9 +1,11 @@
 using CarRentalAPI.Data;
 using CarRentalAPI.Extensions;
+using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Repositories;
 using CarRentalAPI.Repositories.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -36,7 +38,10 @@ builder.Services.ConfigureFluentValidation();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// WIP
+await app.SeedIdentityDb(app.Configuration.GetValue<bool>("AutoMigration"));
+
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

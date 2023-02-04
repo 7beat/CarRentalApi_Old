@@ -16,15 +16,17 @@ namespace CarRentalAPI.Repositories
     {
 
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private AppUser? _user;
 
-        public UserAuthenticationRepository(UserManager<AppUser> userManager, IMapper mapper, IConfiguration configuration)
+        public UserAuthenticationRepository(UserManager<AppUser> userManager, IMapper mapper, IConfiguration configuration, SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _mapper = mapper;
             _configuration = configuration;
+            _signInManager = signInManager;
         }
 
         public async Task<IdentityResult> RegisterUserAsync(UserRegistrationDto userRegistration)
@@ -34,10 +36,34 @@ namespace CarRentalAPI.Repositories
             return result;
         }
 
+        //public async Task<bool> ValidateUserAsync(UserLoginDto loginDto)
+        //{
+        //    _user = await _userManager.FindByNameAsync(loginDto.Username);
+        //    var result = _user != null && await _userManager.CheckPasswordAsync(_user, loginDto.Password);
+        //    return result;
+        //}
+
         public async Task<bool> ValidateUserAsync(UserLoginDto loginDto)
         {
             _user = await _userManager.FindByNameAsync(loginDto.Username);
-            var result = _user != null && await _userManager.CheckPasswordAsync(_user, loginDto.Password);
+
+            if (_user is null)
+                return false;
+
+            var result = await _userManager.CheckPasswordAsync(_user, loginDto.Password);
+
+            if (result is false)
+            {
+                await _userManager.AccessFailedAsync(_user);
+                return false;
+            }
+
+            if (await _userManager.IsLockedOutAsync(_user))
+            {
+                Console.WriteLine($"Account lockedout for: {_user.LockoutEnd - DateTime.UtcNow}");
+                return false;
+            }
+
             return result;
         }
 

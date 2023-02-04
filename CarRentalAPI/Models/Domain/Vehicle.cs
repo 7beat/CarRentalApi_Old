@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using CarRentalAPI.Models.Identity;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -13,6 +14,11 @@ namespace CarRentalAPI.Models.Domain
 
         public Color Color { get; set; }
         public int ColorId { get; set; }
-        public int? AppUserId { get; set; }
+
+        [ForeignKey("UserId")]
+        public AppUser AppUser { get; set; }
+
+        [Column("UserId")]
+        public int? UserId { get; set; }
     }
 }

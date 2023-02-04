@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarRentalAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230201193445_Init")]
+    [Migration("20230203150514_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -35,6 +35,18 @@ namespace CarRentalAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Colors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Black"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "White"
+                        });
                 });
 
             modelBuilder.Entity("CarRentalAPI.Models.Domain.Rental", b =>
@@ -70,10 +82,6 @@ namespace CarRentalAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("AppUserId")
-                        .HasColumnType("int")
-                        .HasColumnName("UserId");
-
                     b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -85,16 +93,46 @@ namespace CarRentalAPI.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int")
+                        .HasColumnName("UserId");
+
                     b.Property<DateOnly>("YearOfProduction")
                         .HasColumnType("date");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
-
                     b.HasIndex("ColorId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Vehicles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Brand = "Ford",
+                            ColorId = 1,
+                            Model = "Mondeo",
+                            YearOfProduction = new DateOnly(2017, 2, 15)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Brand = "Mercedes",
+                            ColorId = 1,
+                            Model = "GLC",
+                            YearOfProduction = new DateOnly(2019, 6, 8)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Brand = "Honda",
+                            ColorId = 2,
+                            Model = "Civic",
+                            YearOfProduction = new DateOnly(2008, 8, 21)
+                        });
                 });
 
             modelBuilder.Entity("CarRentalAPI.Models.Identity.AppUser", b =>
@@ -320,15 +358,17 @@ namespace CarRentalAPI.Migrations
 
             modelBuilder.Entity("CarRentalAPI.Models.Domain.Vehicle", b =>
                 {
-                    b.HasOne("CarRentalAPI.Models.Identity.AppUser", null)
-                        .WithMany("Vehicles")
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("CarRentalAPI.Models.Domain.Color", "Color")
                         .WithMany()
                         .HasForeignKey("ColorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("CarRentalAPI.Models.Identity.AppUser", "AppUser")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("AppUser");
 
                     b.Navigation("Color");
                 });

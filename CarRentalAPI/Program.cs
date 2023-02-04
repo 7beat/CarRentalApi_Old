@@ -39,7 +39,7 @@ builder.Services.ConfigureFluentValidation();
 var app = builder.Build();
 
 // WIP
-await app.SeedIdentityDb();
+await app.SeedIdentityDb(app.Configuration.GetValue<bool>("AutoMigration"));
 
 
 if (app.Environment.IsDevelopment())

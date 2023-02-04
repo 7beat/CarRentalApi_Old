@@ -17,7 +17,7 @@ namespace CarRentalAPI.Extensions
         /// <remarks>Default Accounts: Admin, User. Password = Password123!</remarks>
         /// <param name="app">An instance of <see cref="IApplicationBuilder"/>.</param>
         /// <returns></returns>
-        public static async Task SeedIdentityDb(this IApplicationBuilder app)
+        public static async Task SeedIdentityDb(this IApplicationBuilder app, bool AutoMigration)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
@@ -26,7 +26,7 @@ namespace CarRentalAPI.Extensions
                 using (var context = new AppDbContext(
                 scope.ServiceProvider.GetRequiredService<DbContextOptions<AppDbContext>>()))
                 {
-                    if (!context.Database.GetPendingMigrations().Any())
+                    if (AutoMigration && !context.Database.GetPendingMigrations().Any())
                         context.Database.Migrate();
 
                     var adminUser = await EnsureUser(serviceProvider, "Admin", "Password123!");

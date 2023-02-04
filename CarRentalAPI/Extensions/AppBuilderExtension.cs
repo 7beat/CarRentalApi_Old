@@ -26,6 +26,9 @@ namespace CarRentalAPI.Extensions
                 using (var context = new AppDbContext(
                 scope.ServiceProvider.GetRequiredService<DbContextOptions<AppDbContext>>()))
                 {
+                    if (!context.Database.GetPendingMigrations().Any())
+                        context.Database.Migrate();
+
                     var adminUser = await EnsureUser(serviceProvider, "Admin", "Password123!");
                     await EnsureRole(serviceProvider, adminUser, "Admin");
 

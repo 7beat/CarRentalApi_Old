@@ -130,6 +130,7 @@ namespace CarRentalAPI.Extensions
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IUserAuthenticationRepository, UserAuthenticationRepository>();
             services.AddScoped<IRentalRepository, RentalRepository>();
+            services.AddScoped<IVehicle2Repository, Vehicle2Repository>();
         }
 
         public static void ConfigureFluentValidation(this IServiceCollection services)

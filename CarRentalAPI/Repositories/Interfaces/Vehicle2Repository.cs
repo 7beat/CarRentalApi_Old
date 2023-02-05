@@ -17,14 +17,17 @@ namespace CarRentalAPI.Repositories.Interfaces
         public async Task<Vehicle> GetVehicle(int id, bool trackChanges)
             => await FindByConditionAsync(e => e.Id.Equals(id), trackChanges).Result.Include(x => x.Color).SingleOrDefaultAsync();
 
-        //await FindByConditionAsync(c => c.Id.Equals(teacherId), trackChanges).Result.Include
-
-        public async Task CreateVehicle(Vehicle vehicle) => await CreateAsync(vehicle);
-
         public async Task<IEnumerable<Vehicle>> GetAllVehicles(bool trackChanges)
         {
             //var vehicles = await FindAllAsync(trackChanges).Result.Include(x => x.Color);
             return await FindAllAsync(trackChanges).Result.Include(x => x.Color).ToListAsync();
         }
+
+        public async Task CreateVehicle(Vehicle vehicle) => await CreateAsync(vehicle);
+
+        public async Task DeleteVehicle(Vehicle vehicle) => await RemoveAsync(vehicle);
+
+        public async Task UpdateVehicle(Vehicle vehicle) => await UpdateAsync(vehicle);
+
     }
 }

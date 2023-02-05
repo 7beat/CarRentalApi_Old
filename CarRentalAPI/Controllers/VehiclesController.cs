@@ -96,7 +96,12 @@ namespace CarRentalAPI.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> DeleteVehicleAsync(int id)
         {
-            var vehicleDomain = await vehicleRepository.DeteleAsync(id);
+            //var vehicleDomain = await vehicleRepository.DeteleAsync(id);
+            var vehicleDomain = await vehicle2Repository.GetVehicle(id, true);
+
+            //Deleting vehicle
+            await vehicle2Repository.DeleteVehicle(vehicleDomain);
+            // SaveChanges() on UoW
 
             if (vehicleDomain is null)
                 return NotFound();

@@ -13,19 +13,21 @@ namespace CarRentalAPI.Controllers
     public class VehiclesController : ControllerBase
     {
         private readonly IVehicleRepository vehicleRepository;
+        private readonly IVehicle2Repository vehicle2Repository;
         private readonly IMapper mapper;
-        
-        public VehiclesController(IVehicleRepository vehicleRepository, IMapper mapper)
+        public VehiclesController(IVehicleRepository vehicleRepository, IMapper mapper, IVehicle2Repository vehicle2Repository)
         {
             this.vehicleRepository = vehicleRepository;
             this.mapper = mapper;
+            this.vehicle2Repository = vehicle2Repository;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllVehicles()
         {
-            var vehiclesDomain = await vehicleRepository.GetAllAsync();
-
+            //var vehiclesDomain = await vehicleRepository.GetAllAsync();
+            var vehiclesDomain = await vehicle2Repository.GetAllVehicles(false);
+            Console.WriteLine();
             var vehiclesDTO = mapper.Map<IEnumerable<Models.DTO.Vehicle>>(vehiclesDomain);
 
             return Ok(vehiclesDTO);
@@ -36,7 +38,8 @@ namespace CarRentalAPI.Controllers
         [ActionName("GetVehicleById")]
         public async Task<IActionResult> GetVehicleById(int id)
         {
-            var vehicleDomain = await vehicleRepository.GetByIdAsync(id);
+            //var vehicleDomain = await vehicleRepository.GetByIdAsync(id);
+            var vehicleDomain = await vehicle2Repository.GetVehicle(id, false);
 
             if (vehicleDomain is null)
                 return NotFound();

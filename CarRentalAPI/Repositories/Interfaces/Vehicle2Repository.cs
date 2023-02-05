@@ -15,12 +15,15 @@ namespace CarRentalAPI.Repositories.Interfaces
         //    => await FindByConditionAsync(e => e.TeacherId.Equals(teacherId) && e.Id.Equals(studentId), trackChanges).Result.SingleOrDefaultAsync();
 
         public async Task<Vehicle> GetVehicle(int id, bool trackChanges)
-            => await FindByConditionAsync(e => e.Id.Equals(id), trackChanges).Result.Include(x => x.Color).SingleOrDefaultAsync();
+        {
+            var result = await FindByConditionAsync(e => e.Id.Equals(id), trackChanges);
+            return await result.Include(x => x.Color).SingleOrDefaultAsync();
+        }
 
         public async Task<IEnumerable<Vehicle>> GetAllVehicles(bool trackChanges)
         {
-            //var vehicles = await FindAllAsync(trackChanges).Result.Include(x => x.Color);
-            return await FindAllAsync(trackChanges).Result.Include(x => x.Color).ToListAsync();
+            var result = await FindAllAsync(trackChanges);
+            return await result.Include(x => x.Color).ToListAsync();
         }
 
         public async Task CreateVehicle(Vehicle vehicle) => await CreateAsync(vehicle);

@@ -6,7 +6,7 @@ namespace CarRentalAPI.Models.DTO
     {
         public string Brand { get; set; }
         public string Model { get; set; }
-        public int Color { get; set; }
+        public int ColorId { get; set; }
         public DateOnly YearOfProduction { get; set; }
     }
 }

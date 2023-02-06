@@ -11,9 +11,6 @@ namespace CarRentalAPI.Repositories.Interfaces
 
         }
 
-        //public async Task<Vehicle> GetVehicle(int id)
-        //    => await FindByConditionAsync(e => e.TeacherId.Equals(teacherId) && e.Id.Equals(studentId), trackChanges).Result.SingleOrDefaultAsync();
-
         public async Task<Vehicle> GetVehicle(int id, bool trackChanges)
         {
             var result = await FindByConditionAsync(e => e.Id.Equals(id), trackChanges);

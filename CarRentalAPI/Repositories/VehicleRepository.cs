@@ -9,16 +9,12 @@ namespace CarRentalAPI.Repositories
     {
         public VehicleRepository(AppDbContext appDbContext) : base(appDbContext)
         {
-
         }
 
         public async Task<Vehicle> AddAsync(Vehicle vehicle)
         {
-            //var addedVehicle = await _appDbContext.Vehicles.AddAsync(vehicle);
-            //await _appDbContext.SaveChangesAsync();
-            await CreateAsync(vehicle); //Create nic nie zwraca dlatego ma nulla a id nie zostało zaakutalizowane
-            //WIP
-            return await GetByIdAsync(vehicle.Id);
+            await CreateAsync(vehicle);
+            return vehicle;
         }
 
         public async Task<Vehicle> DeteleAsync(int id)

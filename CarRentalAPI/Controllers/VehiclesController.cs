@@ -91,21 +91,10 @@ namespace CarRentalAPI.Controllers
             // Vehicles .GetById
             var vehicleDomain = await repository.Vehicle.GetVehicle(id, true);
 
-            //if (vehicleDomain is null)
-            //    return NotFound();
+            if (vehicleDomain is null)
+                return NotFound();
 
-            //// New better
-            //mapper.Map(updateVehicleRequest, vehicleDomain);
-            //await repository.Vehicle.UpdateVehicle(vehicleDomain);
-            //await repository.SaveAsync();
-
-            //var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
-            //return Ok(vehicleDTO);
-
-            // New 
-            vehicleDomain.Model = updateVehicleRequest.Model;
-            vehicleDomain.ColorId = updateVehicleRequest.Color;
-
+            mapper.Map(updateVehicleRequest, vehicleDomain);
             await repository.Vehicle.UpdateVehicle(vehicleDomain);
             await repository.SaveAsync();
 

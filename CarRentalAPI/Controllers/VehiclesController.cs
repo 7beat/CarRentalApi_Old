@@ -29,11 +29,10 @@ namespace CarRentalAPI.Controllers
         {
             //var vehiclesDomain = await vehicleRepository.GetAllAsync();
             //var vehiclesDomain = await vehicle2Repository.GetAllVehicles(false);
-            var vehiclesDomain = await repository.Vehicle.GetAllVehicles(false);
-            Console.WriteLine();
-            var vehiclesDTO = mapper.Map<IEnumerable<Models.DTO.Vehicle>>(vehiclesDomain);
+            var vehiclesDomain = await repository.Vehicles.GetAllAsync();
+            var vehiclesDto = mapper.Map<IEnumerable<Models.DTO.Vehicle>>(vehiclesDomain);
 
-            return Ok(vehiclesDTO);
+            return Ok(vehiclesDto);
         }
 
         [HttpGet]
@@ -41,15 +40,14 @@ namespace CarRentalAPI.Controllers
         [ActionName("GetVehicleById")]
         public async Task<IActionResult> GetVehicleById(int id)
         {
-            //var vehicleDomain = await vehicleRepository.GetByIdAsync(id);
-            var vehicleDomain = await vehicle2Repository.GetVehicle(id, false);
+            var vehicleDomain = await repository.Vehicles.GetByIdAsync(id);
 
             if (vehicleDomain is null)
                 return NotFound();
 
-            var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
+            var vehicleDto = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
 
-            return Ok(vehicleDTO);
+            return Ok(vehicleDto);
         }
 
         [HttpPost]
@@ -59,10 +57,10 @@ namespace CarRentalAPI.Controllers
             {
                 Brand = addVehicleRequest.Brand,
                 Model = addVehicleRequest.Model,
-                ColorId = addVehicleRequest.Color,
+                ColorId = addVehicleRequest.ColorId,
                 YearOfProduction = addVehicleRequest.YearOfProduction,
             };
-
+            //var vehicleDomain = new 
             vehicleDomain = await vehicleRepository.AddAsync(vehicleDomain);
 
             var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
@@ -89,13 +87,13 @@ namespace CarRentalAPI.Controllers
 
             // New
             // Vehicles .GetById
-            var vehicleDomain = await repository.Vehicle.GetVehicle(id, true);
+            var vehicleDomain = await repository.Vehicle2.GetVehicle(id, true);
 
             if (vehicleDomain is null)
                 return NotFound();
 
             mapper.Map(updateVehicleRequest, vehicleDomain);
-            await repository.Vehicle.UpdateVehicle(vehicleDomain);
+            await repository.Vehicle2.UpdateVehicle(vehicleDomain);
             await repository.SaveAsync();
 
             var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);

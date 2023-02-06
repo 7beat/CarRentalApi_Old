@@ -11,6 +11,14 @@ namespace CarRentalAPI.Profiles
                 .ForMember(dest => dest.Color, opt => opt.MapFrom(src =>
                 src.Color.Name))
                 .ReverseMap();
+
+            CreateMap<Models.DTO.UpdateVehicleRequest, Models.Domain.Vehicle>()
+                .ForMember(dest => dest.Color, opt => opt.Ignore())
+                                //.ForMember(opt =>)
+                .ForMember(dest => dest.ColorId, opt => opt.MapFrom(src =>
+                src.Color))
+
+                .ReverseMap();
         }
     }
 }

@@ -2,8 +2,9 @@
 {
     public interface IRepositoryManager
     {
-        IVehicle2Repository Vehicle { get; }
+        IVehicle2Repository Vehicle2 { get; }
         //IUserAuthenticationRepository UserAuthentication { get; }
+        IVehicleRepository Vehicles { get; }
         Task SaveAsync();
     }
 }

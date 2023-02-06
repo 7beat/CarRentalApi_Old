@@ -7,6 +7,7 @@ namespace CarRentalAPI.Repositories
     {
         private readonly AppDbContext dbContext;
         private readonly IVehicle2Repository _vehicle2Repository;
+        private readonly IVehicleRepository _vehicleRepository;
 
         public RepositoryManager(AppDbContext dbContext)
         {
@@ -22,7 +23,9 @@ namespace CarRentalAPI.Repositories
         //        return _vehicle2Repository;
         //    }
         //}
-        public IVehicle2Repository Vehicle => _vehicle2Repository ?? new Vehicle2Repository(dbContext);
+        public IVehicle2Repository Vehicle2 => _vehicle2Repository ?? new Vehicle2Repository(dbContext);
+
+        public IVehicleRepository Vehicles => _vehicleRepository ?? new VehicleRepository(dbContext);
 
         public async Task SaveAsync()
         {

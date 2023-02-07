@@ -5,6 +5,7 @@ using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CarRentalAPI.Controllers
 {
@@ -22,6 +23,7 @@ namespace CarRentalAPI.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Retrieve all users", Description = "Retrieve all users in Dto form")]
         public async Task<IActionResult> GetAllUsers()
         {
             var usersDomain = await repository.Users.GetAllAsync();
@@ -33,6 +35,7 @@ namespace CarRentalAPI.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
+        [SwaggerOperation(Summary = "Retrieve single user", Description = "Retrieve single user by id in Dto form")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var userDomain = await repository.Users.GetByIdAsync(id);
@@ -44,6 +47,7 @@ namespace CarRentalAPI.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
+        [SwaggerOperation(Summary = "Modify existing user", Description = "Modify existing user by id")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserUpdateDto updateRequest)
         {
             var user = await repository.Users.UpdateAsync(id, updateRequest);
@@ -54,6 +58,7 @@ namespace CarRentalAPI.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
+        [SwaggerOperation(Summary = "Delete existing user", Description = "Delete existing user by id")]
         public async Task<IActionResult> DeleteUserAsync(int id)
         {
             var userDomain = await repository.Users.DeleteAsync(id);

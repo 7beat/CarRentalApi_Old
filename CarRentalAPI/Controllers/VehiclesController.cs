@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CarRentalAPI.Controllers
 {
@@ -21,6 +22,7 @@ namespace CarRentalAPI.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Retrieve all vehicles", Description = "Retrieve all vehicles in Dto form")]
         public async Task<IActionResult> GetAllVehicles()
         {
             var vehiclesDomain = await repository.Vehicles.GetAllAsync();
@@ -32,6 +34,7 @@ namespace CarRentalAPI.Controllers
         [HttpGet]
         [Route("{id:int}")]
         [ActionName("GetVehicleById")]
+        [SwaggerOperation(Summary = "Retrieve single vehicle", Description = "Retrieve single vehicle by id in Dto form")]
         public async Task<IActionResult> GetVehicleById(int id)
         {
             var vehicleDomain = await repository.Vehicles.GetByIdAsync(id);
@@ -45,6 +48,10 @@ namespace CarRentalAPI.Controllers
         }
 
         [HttpPost]
+        [Consumes("application/json")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Models.DTO.Vehicle), 201)]
+        [SwaggerOperation(Summary = "Add new vehicle", Description = "Add new vehicle, display new object with all relations")]
         public async Task<IActionResult> AddVehicle([FromBody] Models.DTO.AddVehicleRequest addVehicleRequest)
         {
             var vehicleDomain = new Models.Domain.Vehicle
@@ -69,6 +76,7 @@ namespace CarRentalAPI.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
+        [SwaggerOperation(Summary = "Modify existing vehicle", Description = "Modify existing vehicle, Color could be changed.")]
         public async Task<IActionResult> UpdateVehicleAsync(int id,
             [FromBody] Models.DTO.UpdateVehicleRequest updateVehicleRequest)
         {
@@ -96,6 +104,7 @@ namespace CarRentalAPI.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
+        [SwaggerOperation(Summary = "Delete existing vehicle", Description = "Delete existing vehicle")]
         public async Task<IActionResult> DeleteVehicleAsync(int id)
         {
             var vehicleDomain = await repository.Vehicles.DeteleAsync(id);

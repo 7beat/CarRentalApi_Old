@@ -5,6 +5,7 @@
         IVehicle2Repository Vehicle2 { get; }
         //IUserAuthenticationRepository UserAuthentication { get; }
         IVehicleRepository Vehicles { get; }
+        IUserAuthenticationRepository UserAuthentication { get; }
         Task SaveAsync();
     }
 }

@@ -41,7 +41,7 @@ namespace CarRentalAPI.Controllers
         [ActionName("GetRentalById")]
         public async Task<IActionResult> GetRentalById(int id)
         {
-            var rentalDomain = await rentalRepository.GetByIdAsync(id);
+            var rentalDomain = await repoMgr.Rentals.GetByIdAsync(id);
 
             if (rentalDomain is null)
                 return NotFound();
@@ -65,13 +65,16 @@ namespace CarRentalAPI.Controllers
                 EndDate= rentalAddRequest.EndDate
             };
 
-            rentalDomain = await rentalRepository.AddAsync(rentalDomain);
+            //rentalDomain = await rentalRepository.AddAsync(rentalDomain);
+            await repoMgr.Rentals.AddAsync(rentalDomain);
+            await repoMgr.SaveAsync();
 
-            if (rentalDomain is null)
-                return BadRequest();
+            // Get new object with relations
+            var updatedRentalDomain = await repoMgr.Rentals.GetByIdAsync(rentalDomain.Id);
 
-            var rentalDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
+            var rentalDto = mapper.Map<Models.DTO.Rental>(updatedRentalDomain);
 
+            //201
             return CreatedAtAction(nameof(GetRentalById), new { id = rentalDto.Id }, rentalDto);
         }
 

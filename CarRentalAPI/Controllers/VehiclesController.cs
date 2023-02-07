@@ -102,18 +102,16 @@ namespace CarRentalAPI.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> DeleteVehicleAsync(int id)
         {
-            //var vehicleDomain = await vehicleRepository.DeteleAsync(id);
             var vehicleDomain = await repository.Vehicles.DeteleAsync(id);
-
-            //Deleting vehicle
-            //await vehicle2Repository.DeleteVehicle(vehicleDomain);
-            await repository.SaveAsync();
 
             if (vehicleDomain is null)
                 return NotFound();
 
+            await repository.SaveAsync();
+
             var vehicleDto = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
             return Ok(vehicleDto);
+            //return NoContent()
         }
 
         private bool ValidateUpdateVehicle(Models.DTO.UpdateVehicleRequest updateVehicleRequest)

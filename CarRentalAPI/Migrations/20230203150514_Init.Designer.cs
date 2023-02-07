@@ -22,7 +22,7 @@ namespace CarRentalAPI.Migrations
                 .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("CarRentalAPI.Models.Domain.Color", b =>
+            modelBuilder.Entity("CarRentalAPI.Models.Domain.ColorId", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -76,7 +76,7 @@ namespace CarRentalAPI.Migrations
                     b.ToTable("Rentals");
                 });
 
-            modelBuilder.Entity("CarRentalAPI.Models.Domain.Vehicle", b =>
+            modelBuilder.Entity("CarRentalAPI.Models.Domain.Vehicle2", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -345,7 +345,7 @@ namespace CarRentalAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CarRentalAPI.Models.Domain.Vehicle", "Vehicle")
+                    b.HasOne("CarRentalAPI.Models.Domain.Vehicle2", "Vehicle2")
                         .WithMany()
                         .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -353,12 +353,12 @@ namespace CarRentalAPI.Migrations
 
                     b.Navigation("User");
 
-                    b.Navigation("Vehicle");
+                    b.Navigation("Vehicle2");
                 });
 
-            modelBuilder.Entity("CarRentalAPI.Models.Domain.Vehicle", b =>
+            modelBuilder.Entity("CarRentalAPI.Models.Domain.Vehicle2", b =>
                 {
-                    b.HasOne("CarRentalAPI.Models.Domain.Color", "Color")
+                    b.HasOne("CarRentalAPI.Models.Domain.ColorId", "ColorId")
                         .WithMany()
                         .HasForeignKey("ColorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -370,7 +370,7 @@ namespace CarRentalAPI.Migrations
 
                     b.Navigation("AppUser");
 
-                    b.Navigation("Color");
+                    b.Navigation("ColorId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

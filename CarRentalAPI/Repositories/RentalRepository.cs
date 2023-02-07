@@ -6,64 +6,63 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarRentalAPI.Repositories
 {
-    public class RentalRepository : IRentalRepository
+    public class RentalRepository : RepositoryBase<Rental>, IRentalRepository
     {
         private readonly AppDbContext _appDbContext;
-        public RentalRepository(AppDbContext appContext)
+        public RentalRepository(AppDbContext appContext) : base(appContext)
         {
-            _appDbContext = appContext;
+            //_appDbContext = appContext;
         }
 
         public async Task<IEnumerable<Rental>> GetAllAsync()
         {
-            return await _appDbContext.Rentals
-                .Include(x => x.User)
-                .Include(x => x.Vehicle)
-                .ThenInclude(x => x.Color)
-                .ToListAsync();
+            var query = await FindAllAsync(false);
+            var result = await query.Include(x => x.User).Include(x => x.Vehicle).ThenInclude(x => x.Color).ToListAsync();
+            return result;
         }
 
         public async Task<Rental> GetByIdAsync(int id)
         {
-            return await _appDbContext.Rentals
-                .Include(x => x.Vehicle)
-                .ThenInclude(x => x.Color)
-                .FirstOrDefaultAsync(x => x.Id == id);
+            var query = await FindByConditionAsync(x => x.Id.Equals(id), false);
+            var result = await query.Include(x => x.Vehicle).ThenInclude(x => x.Color).SingleOrDefaultAsync();
+            return result;
         }
 
-        public async Task<Rental> AddAsync(Rental rental)
-        {
-            var addedRental = await _appDbContext.Rentals.AddAsync(rental);
-            await _appDbContext.SaveChangesAsync();
-
-            return await GetByIdAsync(rental.Id);
-        }
+        public async Task AddAsync(Rental rental) => await CreateAsync(rental);
 
         public async Task<Rental> UpdateAsync(int id, Rental rental)
         {
-            var existingRental = await _appDbContext.Rentals.FindAsync(id);
+            //var existingRental = await _appDbContext.Rentals.FindAsync(id);
 
-            if (existingRental is null)
-            {
-                return null;
-            }
+            //if (existingRental is null)
+            //{
+            //    return null;
+            //}
 
-            existingRental.StartDate = rental.StartDate;
-            existingRental.EndDate= rental.EndDate;
-            await _appDbContext.SaveChangesAsync();
-            return existingRental;
+            //existingRental.StartDate = rental.StartDate;
+            //existingRental.EndDate= rental.EndDate;
+            //await _appDbContext.SaveChangesAsync();
+            var existingRental = await FindByConditionAsync(x => x.Id.Equals(id), true);
+            var result = await existingRental.SingleOrDefaultAsync();
+
+            result.StartDate = rental.StartDate;
+            result.EndDate = rental.EndDate;
+
+            await UpdateAsync(result);
+
+            return result;
         }
 
         public async Task<Rental> DeleteAsync(int id)
         {
-            var existingRental = await _appDbContext.Rentals.FindAsync(id);
+            var existingVehicle = await FindByConditionAsync(x => x.Id.Equals(id), true);
+            var result = await existingVehicle.FirstOrDefaultAsync();
 
-            if (existingRental is not null)
+            if (result is not null)
             {
-                _appDbContext.Rentals.Remove(existingRental);
-                await _appDbContext.SaveChangesAsync();
+                await RemoveAsync(result);
 
-                return existingRental;
+                return result;
             }
             return null;
         }

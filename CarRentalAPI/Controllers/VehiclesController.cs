@@ -12,23 +12,21 @@ namespace CarRentalAPI.Controllers
     [ApiController]
     public class VehiclesController : ControllerBase
     {
-        private readonly IVehicleRepository vehicleRepository;
+        private readonly IRepositoryManager repository;
         private readonly IMapper mapper;
-        
-        public VehiclesController(IVehicleRepository vehicleRepository, IMapper mapper)
+        public VehiclesController(IRepositoryManager repository, IMapper mapper)
         {
-            this.vehicleRepository = vehicleRepository;
+            this.repository = repository;
             this.mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllVehicles()
         {
-            var vehiclesDomain = await vehicleRepository.GetAllAsync();
+            var vehiclesDomain = await repository.Vehicles.GetAllAsync();
+            var vehiclesDto = mapper.Map<IEnumerable<Models.DTO.Vehicle>>(vehiclesDomain);
 
-            var vehiclesDTO = mapper.Map<IEnumerable<Models.DTO.Vehicle>>(vehiclesDomain);
-
-            return Ok(vehiclesDTO);
+            return Ok(vehiclesDto);
         }
 
         [HttpGet]
@@ -36,14 +34,14 @@ namespace CarRentalAPI.Controllers
         [ActionName("GetVehicleById")]
         public async Task<IActionResult> GetVehicleById(int id)
         {
-            var vehicleDomain = await vehicleRepository.GetByIdAsync(id);
+            var vehicleDomain = await repository.Vehicles.GetByIdAsync(id);
 
             if (vehicleDomain is null)
                 return NotFound();
 
-            var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
+            var vehicleDto = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
 
-            return Ok(vehicleDTO);
+            return Ok(vehicleDto);
         }
 
         [HttpPost]
@@ -53,16 +51,20 @@ namespace CarRentalAPI.Controllers
             {
                 Brand = addVehicleRequest.Brand,
                 Model = addVehicleRequest.Model,
-                ColorId = addVehicleRequest.Color,
+                ColorId = addVehicleRequest.ColorId,
                 YearOfProduction = addVehicleRequest.YearOfProduction,
             };
 
-            vehicleDomain = await vehicleRepository.AddAsync(vehicleDomain);
+            await repository.Vehicles.AddAsync(vehicleDomain);
+            await repository.SaveAsync();
 
-            var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
+            // Get new object with related Color
+            var updatedVehicleDomain = await repository.Vehicles.GetByIdAsync(vehicleDomain.Id);
+
+            var vehicleDto = mapper.Map<Models.DTO.Vehicle>(updatedVehicleDomain);
 
             //201
-            return CreatedAtAction(nameof(GetVehicleById), new {id = vehicleDTO.Id}, vehicleDTO);
+            return CreatedAtAction(nameof(GetVehicleById), new {id = vehicleDto.Id}, vehicleDto);
         }
 
         [HttpPut]
@@ -79,27 +81,33 @@ namespace CarRentalAPI.Controllers
                 ColorId = updateVehicleRequest.Color,
             };
 
-            vehicleDomain = await vehicleRepository.UpdateAsync(id, vehicleDomain);
+            vehicleDomain = await repository.Vehicles.UpdateAsync(id, vehicleDomain);
 
             if (vehicleDomain is null)
                 return NotFound();
 
-            var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
+            await repository.SaveAsync();
 
-            return Ok(vehicleDTO);
+            var vehicleDto = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
+
+            return Ok(vehicleDto);
+            //return NoContent();
         }
 
         [HttpDelete]
         [Route("{id:int}")]
         public async Task<IActionResult> DeleteVehicleAsync(int id)
         {
-            var vehicleDomain = await vehicleRepository.DeteleAsync(id);
+            var vehicleDomain = await repository.Vehicles.DeteleAsync(id);
 
             if (vehicleDomain is null)
                 return NotFound();
 
-            var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
-            return Ok(vehicleDTO);
+            await repository.SaveAsync();
+
+            var vehicleDto = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
+            return Ok(vehicleDto);
+            //return NoContent()
         }
 
         private bool ValidateUpdateVehicle(Models.DTO.UpdateVehicleRequest updateVehicleRequest)

@@ -11,8 +11,9 @@ namespace CarRentalAPI.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IUserAuthenticationRepository repository;
-        public AuthController(IUserAuthenticationRepository repository)
+        private readonly IRepositoryManager repository;
+
+        public AuthController(IRepositoryManager repository)
         {
             this.repository = repository;
         }
@@ -22,28 +23,27 @@ namespace CarRentalAPI.Controllers
         [Route("Register")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto registerRequest)
         {
-            var userResult = await repository.RegisterUserAsync(registerRequest);
+            var userResult = await repository.UserAuthentication.RegisterUserAsync(registerRequest);
             return !userResult.Succeeded ? new BadRequestObjectResult(userResult) : StatusCode(StatusCodes.Status201Created);
         }
+
+        //[HttpPost]
+        //[Route("login")]
+        //public async Task<IActionResult> Authenticate([FromForm] UserLoginDto loginRequest)
+        //    => !await repository.ValidateUserAsync(loginRequest) ? Unauthorized() : Ok(new { Token = await repository.CreateTokenAsync() });
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Authenticate([FromForm] UserLoginDto loginRequest)
-            => !await repository.ValidateUserAsync(loginRequest) ? Unauthorized() : Ok(new { Token = await repository.CreateTokenAsync() });
-
-
-        //[HttpPost]
-        //[Route("login")]
-        //public async Task<IActionResult> Authenticate([FromBody] Models.DTO.UserLoginDto loginRequest)
-        //{
-        //    if (!await repository.ValidateUserAsync(loginRequest))
-        //    {
-        //        return Unauthorized();
-        //    }
-        //    else
-        //    {
-        //        return Ok(new { Token = await repository.CreateTokenAsync() });
-        //    }
-        //}
+        {
+            if (!await repository.UserAuthentication.ValidateUserAsync(loginRequest))
+            {
+                return Unauthorized();
+            }
+            else
+            {
+                return Ok(new { Token = await repository.UserAuthentication.CreateTokenAsync() });
+            }
+        }
     }
 }

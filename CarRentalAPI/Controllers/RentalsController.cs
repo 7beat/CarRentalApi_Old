@@ -12,20 +12,19 @@ namespace CarRentalAPI.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly AppDbContext _appDbContext;
-        private readonly IRentalRepository rentalRepository;
+        private readonly IRepositoryManager repository;
         private readonly IMapper mapper;
-        public RentalsController(AppDbContext appDbContext, IRentalRepository repository, IMapper mapper)
+
+        public RentalsController(IRepositoryManager repository, IMapper mapper)
         {
-            _appDbContext = appDbContext;
-            rentalRepository = repository;
             this.mapper = mapper;
+            this.repository = repository;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllRentals()
         {
-            var rentalsDomain = await rentalRepository.GetAllAsync();
+            var rentalsDomain = await repository.Rentals.GetAllAsync();
 
             var rentalsDto = mapper.Map<IEnumerable<Models.DTO.Rental>>(rentalsDomain);
 
@@ -37,7 +36,7 @@ namespace CarRentalAPI.Controllers
         [ActionName("GetRentalById")]
         public async Task<IActionResult> GetRentalById(int id)
         {
-            var rentalDomain = await rentalRepository.GetByIdAsync(id);
+            var rentalDomain = await repository.Rentals.GetByIdAsync(id);
 
             if (rentalDomain is null)
                 return NotFound();
@@ -50,7 +49,7 @@ namespace CarRentalAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRental([FromBody] Models.DTO.RentalAddRequest rentalAddRequest)
         {
-            if (!ValidateAddRental(rentalAddRequest))
+            if (!await ValidateAddRental(rentalAddRequest))
                 return BadRequest(ModelState);
 
             var rentalDomain = new Models.Domain.Rental
@@ -61,13 +60,15 @@ namespace CarRentalAPI.Controllers
                 EndDate= rentalAddRequest.EndDate
             };
 
-            rentalDomain = await rentalRepository.AddAsync(rentalDomain);
+            await repository.Rentals.AddAsync(rentalDomain);
+            await repository.SaveAsync();
 
-            if (rentalDomain is null)
-                return BadRequest();
+            // Get new object with relations
+            rentalDomain = await repository.Rentals.GetByIdAsync(rentalDomain.Id);
 
             var rentalDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
 
+            //201
             return CreatedAtAction(nameof(GetRentalById), new { id = rentalDto.Id }, rentalDto);
         }
 
@@ -75,7 +76,7 @@ namespace CarRentalAPI.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> UpdateRental(int id, [FromBody] Models.DTO.RentalUpdateRequest rentalAddRequest)
         {
-            if (!ValidateUpdateRental(id, rentalAddRequest))
+            if (!await ValidateUpdateRental(id, rentalAddRequest))
                 return BadRequest(ModelState);
 
             var rentalDomain = new Models.Domain.Rental
@@ -84,10 +85,12 @@ namespace CarRentalAPI.Controllers
                 EndDate = rentalAddRequest.EndDate
             };
 
-            rentalDomain = await rentalRepository.UpdateAsync(id, rentalDomain);
+            rentalDomain = await repository.Rentals.UpdateAsync(id, rentalDomain);
 
             if (rentalDomain is null)
                 return BadRequest();
+
+            await repository.SaveAsync();
 
             var rentalDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
 
@@ -98,16 +101,18 @@ namespace CarRentalAPI.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> DeteleRental(int id)
         {
-            var rentalDomain = await rentalRepository.DeleteAsync(id);
+            var rentalDomain = await repository.Rentals.DeleteAsync(id);
 
             if (rentalDomain is null)
                 return NotFound();
+
+            await repository.SaveAsync();
 
             var rentalDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
             return Ok(rentalDto);
         }
 
-        private bool ValidateAddRental(Models.DTO.RentalAddRequest newRental)
+        private async Task<bool> ValidateAddRental(Models.DTO.RentalAddRequest newRental)
         {
             if (newRental.UserId <= 0)
             {
@@ -121,12 +126,20 @@ namespace CarRentalAPI.Controllers
                 return false;
             }
 
-            foreach (var item in _appDbContext.Rentals.Where(x => x.Vehicle.Id == newRental.VehicleId)) // All rentals of given car
+            if (newRental.StartDate > newRental.EndDate)
+            {
+                ModelState.AddModelError(nameof(newRental), $"{nameof(newRental.EndDate)} cant be in past.");
+                return false;
+            }
+
+            var existingRentals = await repository.Rentals.GetAllAsync();
+
+            foreach (var item in existingRentals.Where(x => x.Vehicle.Id == newRental.VehicleId)) // All rentals of given car
             {
                 // Is a start or end of new rental between start and end of existing one?
                 if (newRental.StartDate.IsInRange(item.StartDate, item.EndDate) || newRental.EndDate.IsInRange(item.StartDate, item.EndDate))
                 {
-                    // Dates are coliding
+                    // Dates are coliding, new rental is trying to be inserted under exising one!
                     ModelState.AddModelError(nameof(newRental), $"Dates are coliding with {item.Id}");
                 }
 
@@ -142,12 +155,19 @@ namespace CarRentalAPI.Controllers
             return ModelState.ErrorCount > 0 ? false : true;
         }
 
-        private bool ValidateUpdateRental(int id, Models.DTO.RentalUpdateRequest newRental)
+        private async Task<bool> ValidateUpdateRental(int id, Models.DTO.RentalUpdateRequest newRental)
         {
-            var newRentalId = _appDbContext.Rentals.Find(id);
+            if (newRental.StartDate > newRental.EndDate)
+            {
+                ModelState.AddModelError(nameof(newRental), $"{nameof(newRental.EndDate)} cant be in past.");
+                return false;
+            }
+
+            var newRentalDb = await repository.Rentals.GetByIdAsync(id);
+            var existingRentals = await repository.Rentals.GetAllAsync();
 
             // All rentals of given car excluding the modified one!
-            foreach (var item in _appDbContext.Rentals.Where(x => x.Vehicle.Id == newRentalId.VehicleId && x.Id != newRentalId.Id))
+            foreach (var item in existingRentals.Where(x => x.Vehicle.Id == newRentalDb.VehicleId && x.Id != newRentalDb.Id))
             {
                 // Is a start or end of new rental between start and end of existing one? New Rental cant start if the car is already rented!
                 if (newRental.StartDate.IsInRange(item.StartDate, item.EndDate) || newRental.EndDate.IsInRange(item.StartDate, item.EndDate))

@@ -14,19 +14,16 @@ namespace CarRentalAPI.Repositories
 {
     internal sealed class UserAuthenticationRepository : IUserAuthenticationRepository
     {
-
         private readonly UserManager<AppUser> _userManager;
-        //private readonly SignInManager<AppUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private AppUser? _user;
 
-        public UserAuthenticationRepository(UserManager<AppUser> userManager, /*IMapper mapper,*/ IConfiguration configuration /*SignInManager<AppUser> signInManager*/)
+        public UserAuthenticationRepository(UserManager<AppUser> userManager, IConfiguration configuration, IMapper mapper)
         {
             _userManager = userManager;
-            //_mapper = mapper;
+            _mapper = mapper;
             _configuration = configuration;
-            //_signInManager = signInManager;
         }
 
         public async Task<IdentityResult> RegisterUserAsync(UserRegistrationDto userRegistration)
@@ -112,6 +109,5 @@ namespace CarRentalAPI.Repositories
             );
             return tokenOptions;
         }
-
     }
 }

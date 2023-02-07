@@ -60,7 +60,7 @@ namespace CarRentalAPI.Extensions
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = jwtConfig["Issuer"], //ValidIssuer
+                    ValidIssuer = jwtConfig["Issuer"],
                     ValidAudience = jwtConfig["Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
                 };
@@ -125,16 +125,8 @@ namespace CarRentalAPI.Extensions
         }
 
         public static void ConfigureRepositories(this IServiceCollection services)
-        {
-            services.AddScoped<IUserRepository, UserRepository>();
-            //services.AddScoped<IVehicleRepository, VehicleRepository>();
-            services.AddScoped<IUserAuthenticationRepository, UserAuthenticationRepository>();
-            services.AddScoped<IRentalRepository, RentalRepository>();
-
-            services.AddScoped<IVehicle2Repository, Vehicle2Repository>();
-            services.AddScoped<IRepositoryManager, RepositoryManager>();
-        }
-
+            => services.AddScoped<IRepositoryManager, RepositoryManager>();
+        
         public static void ConfigureFluentValidation(this IServiceCollection services)
         {
             services.AddFluentValidationAutoValidation()

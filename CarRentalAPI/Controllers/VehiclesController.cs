@@ -27,8 +27,6 @@ namespace CarRentalAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllVehicles()
         {
-            //var vehiclesDomain = await vehicleRepository.GetAllAsync();
-            //var vehiclesDomain = await vehicle2Repository.GetAllVehicles(false);
             var vehiclesDomain = await repository.Vehicles.GetAllAsync();
             var vehiclesDto = mapper.Map<IEnumerable<Models.DTO.Vehicle>>(vehiclesDomain);
 
@@ -63,9 +61,11 @@ namespace CarRentalAPI.Controllers
 
             vehicleDomain = await repository.Vehicles.AddAsync(vehicleDomain);
             await repository.SaveAsync();
-            //vehicleDomain = await vehicleRepository.AddAsync(vehicleDomain);
 
-            var vehicleDto = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
+            // Get new object with related Color
+            var updatedVehicleDomain = await repository.Vehicles.GetByIdAsync(vehicleDomain.Id);
+
+            var vehicleDto = mapper.Map<Models.DTO.Vehicle>(updatedVehicleDomain);
 
             //201
             return CreatedAtAction(nameof(GetVehicleById), new {id = vehicleDto.Id}, vehicleDto);

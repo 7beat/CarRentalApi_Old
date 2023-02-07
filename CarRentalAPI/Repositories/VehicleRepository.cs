@@ -15,7 +15,6 @@ namespace CarRentalAPI.Repositories
 
         public async Task<Vehicle> DeteleAsync(int id)
         {
-            //var existingVehicle = await _appDbContext.Vehicles.FindAsync(id);
             var existingVehicle = await FindByConditionAsync(x => x.Id == id, true);
             var result = await existingVehicle.FirstOrDefaultAsync();
 
@@ -30,16 +29,13 @@ namespace CarRentalAPI.Repositories
 
         public async Task<IEnumerable<Vehicle>> GetAllAsync()
         {
-            var result = await base.FindAllAsync(false);
+            var result = await FindAllAsync(false);
             return await result.Include(x => x.Color).ToListAsync();
         }
 
         public async Task<Vehicle> GetByIdAsync(int id)
-        //=> await _appDbContext.Vehicles
-        //    .Include(x => x.Color)
-        //    .FirstOrDefaultAsync(x => x.Id == id);
         {
-            var query = await base.FindByConditionAsync(x => x.Id.Equals(id), false);
+            var query = await FindByConditionAsync(x => x.Id.Equals(id), false);
             var result = await query.Include(x => x.Color).FirstOrDefaultAsync();
 
             return result;
@@ -50,17 +46,16 @@ namespace CarRentalAPI.Repositories
             var existingVehicle = await FindByConditionAsync(x => x.Id.Equals(id), true);
             var result = await existingVehicle.FirstOrDefaultAsync();
 
-
             if (result is null)
                 return null;
 
-            //Modification
+            // Modification
             result.ColorId = vehicle.ColorId;
             result.Model = vehicle.Model;
 
-            await base.UpdateAsync(result);
+            await UpdateAsync(result);
 
-            return result; //???
+            return result;
         }
     }
 }

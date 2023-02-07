@@ -11,11 +11,7 @@ namespace CarRentalAPI.Repositories
         {
         }
 
-        public async Task<Vehicle> AddAsync(Vehicle vehicle)
-        {
-            await CreateAsync(vehicle);
-            return vehicle;
-        }
+        public async Task AddAsync(Vehicle vehicle) => await CreateAsync(vehicle);
 
         public async Task<Vehicle> DeteleAsync(int id)
         {

@@ -59,7 +59,7 @@ namespace CarRentalAPI.Controllers
                 YearOfProduction = addVehicleRequest.YearOfProduction,
             };
 
-            vehicleDomain = await repository.Vehicles.AddAsync(vehicleDomain);
+            await repository.Vehicles.AddAsync(vehicleDomain);
             await repository.SaveAsync();
 
             // Get new object with related Color

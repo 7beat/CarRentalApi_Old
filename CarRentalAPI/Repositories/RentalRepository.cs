@@ -37,13 +37,7 @@ namespace CarRentalAPI.Repositories
             return result;
         }
 
-        public async Task<Rental> AddAsync(Rental rental)
-        {
-            var addedRental = await _appDbContext.Rentals.AddAsync(rental);
-            await _appDbContext.SaveChangesAsync();
-
-            return await GetByIdAsync(rental.Id);
-        }
+        public async Task AddAsync(Rental rental) => await CreateAsync(rental);
 
         public async Task<Rental> UpdateAsync(int id, Rental rental)
         {

@@ -12,10 +12,9 @@ namespace CarRentalAPI.Controllers
     [ApiController]
     public class RentalsController : ControllerBase
     {
-        private readonly AppDbContext _appDbContext;
+        private readonly IRepositoryManager repository;
         private readonly IMapper mapper;
 
-        private readonly IRepositoryManager repository;
         public RentalsController(IRepositoryManager repository, IMapper mapper)
         {
             this.mapper = mapper;
@@ -25,7 +24,6 @@ namespace CarRentalAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllRentals()
         {
-            //var rentalsDomain = await rentalRepository.GetAllAsync();
             var rentalsDomain = await repository.Rentals.GetAllAsync();
 
             var rentalsDto = mapper.Map<IEnumerable<Models.DTO.Rental>>(rentalsDomain);
@@ -128,6 +126,12 @@ namespace CarRentalAPI.Controllers
                 return false;
             }
 
+            if (newRental.StartDate > newRental.EndDate)
+            {
+                ModelState.AddModelError(nameof(newRental), $"{nameof(newRental.EndDate)} cant be in past.");
+                return false;
+            }
+
             var existingRentals = await repository.Rentals.GetAllAsync();
 
             foreach (var item in existingRentals.Where(x => x.Vehicle.Id == newRental.VehicleId)) // All rentals of given car
@@ -153,6 +157,12 @@ namespace CarRentalAPI.Controllers
 
         private async Task<bool> ValidateUpdateRental(int id, Models.DTO.RentalUpdateRequest newRental)
         {
+            if (newRental.StartDate > newRental.EndDate)
+            {
+                ModelState.AddModelError(nameof(newRental), $"{nameof(newRental.EndDate)} cant be in past.");
+                return false;
+            }
+
             var newRentalDb = await repository.Rentals.GetByIdAsync(id);
             var existingRentals = await repository.Rentals.GetAllAsync();
 

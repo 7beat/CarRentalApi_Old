@@ -16,11 +16,6 @@ namespace CarRentalAPI.Repositories
 
         public async Task<IEnumerable<Rental>> GetAllAsync()
         {
-            //return await _appDbContext.Rentals
-            //    .Include(x => x.User)
-            //    .Include(x => x.Vehicle)
-            //    .ThenInclude(x => x.Color)
-            //    .ToListAsync();
             var query = await FindAllAsync(false);
             var result = await query.Include(x => x.User).Include(x => x.Vehicle).ThenInclude(x => x.Color).ToListAsync();
             return result;
@@ -28,10 +23,6 @@ namespace CarRentalAPI.Repositories
 
         public async Task<Rental> GetByIdAsync(int id)
         {
-            //return await _appDbContext.Rentals
-            //    .Include(x => x.Vehicle)
-            //    .ThenInclude(x => x.Color)
-            //    .FirstOrDefaultAsync(x => x.Id == id);
             var query = await FindByConditionAsync(x => x.Id.Equals(id), false);
             var result = await query.Include(x => x.Vehicle).ThenInclude(x => x.Color).SingleOrDefaultAsync();
             return result;
@@ -55,18 +46,6 @@ namespace CarRentalAPI.Repositories
         }
 
         public async Task<Rental> DeleteAsync(int id)
-        //{
-        //    var existingRental = await _appDbContext.Rentals.FindAsync(id);
-
-        //    if (existingRental is not null)
-        //    {
-        //        _appDbContext.Rentals.Remove(existingRental);
-        //        await _appDbContext.SaveChangesAsync();
-
-        //        return existingRental;
-        //    }
-        //    return null;
-        //}
         {
             var existingVehicle = await FindByConditionAsync(x => x.Id.Equals(id), true);
             var result = await existingVehicle.FirstOrDefaultAsync();

@@ -9,7 +9,6 @@ namespace CarRentalAPI.Repositories
     public class RepositoryManager : IRepositoryManager
     {
         private readonly AppDbContext dbContext;
-        private readonly IVehicle2Repository _vehicle2Repository;
         private readonly IVehicleRepository _vehicleRepository;
         private readonly IRentalRepository _rentalRepository;
         private readonly IUserRepository _userRepository;
@@ -26,17 +25,7 @@ namespace CarRentalAPI.Repositories
             this.mapper = mapper;
         }
 
-        //public IVehicle2Repository Vehicle
-        //{
-        //    get
-        //    {
-        //        if (_vehicle2Repository is null)
-        //            _vehicle2Repository = new Vehicle2Repository(dbContext);
-        //        return _vehicle2Repository;
-        //    }
-        //}
-        public IVehicle2Repository Vehicle2 => _vehicle2Repository ?? new Vehicle2Repository(dbContext);
-
+        public IUserRepository Users => _userRepository ?? new UserRepository(_userManager);
         public IVehicleRepository Vehicles => _vehicleRepository ?? new VehicleRepository(dbContext);
         public IRentalRepository Rentals => _rentalRepository ?? new RentalRepository(dbContext);
 
@@ -50,8 +39,6 @@ namespace CarRentalAPI.Repositories
                 return _userAuthenticationRepository;
             }
         }
-
-        public IUserRepository Users => _userRepository ?? new UserRepository(_userManager);
 
         public async Task SaveAsync()
         {

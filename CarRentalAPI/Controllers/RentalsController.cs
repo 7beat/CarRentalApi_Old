@@ -15,17 +15,21 @@ namespace CarRentalAPI.Controllers
         private readonly AppDbContext _appDbContext;
         private readonly IRentalRepository rentalRepository;
         private readonly IMapper mapper;
-        public RentalsController(AppDbContext appDbContext, IRentalRepository repository, IMapper mapper)
+
+        private readonly IRepositoryManager repoMgr;
+        public RentalsController(AppDbContext appDbContext, IRentalRepository repository, IMapper mapper, IRepositoryManager repoMgr)
         {
             _appDbContext = appDbContext;
             rentalRepository = repository;
             this.mapper = mapper;
+            this.repoMgr = repoMgr;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllRentals()
         {
-            var rentalsDomain = await rentalRepository.GetAllAsync();
+            //var rentalsDomain = await rentalRepository.GetAllAsync();
+            var rentalsDomain = await repoMgr.Rentals.GetAllAsync();
 
             var rentalsDto = mapper.Map<IEnumerable<Models.DTO.Rental>>(rentalsDomain);
 

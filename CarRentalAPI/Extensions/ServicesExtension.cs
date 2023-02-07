@@ -127,7 +127,7 @@ namespace CarRentalAPI.Extensions
         public static void ConfigureRepositories(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IVehicleRepository, VehicleRepository>();
+            //services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IUserAuthenticationRepository, UserAuthenticationRepository>();
             services.AddScoped<IRentalRepository, RentalRepository>();
 

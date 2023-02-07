@@ -12,6 +12,7 @@ namespace CarRentalAPI.Repositories
         private readonly IVehicle2Repository _vehicle2Repository;
         private readonly IVehicleRepository _vehicleRepository;
         private readonly IRentalRepository _rentalRepository;
+        private readonly IUserRepository _userRepository;
         private IUserAuthenticationRepository _userAuthenticationRepository;
         private UserManager<AppUser> _userManager;
         private IConfiguration _configuration;
@@ -49,6 +50,8 @@ namespace CarRentalAPI.Repositories
                 return _userAuthenticationRepository;
             }
         }
+
+        public IUserRepository Users => _userRepository ?? new UserRepository(_userManager);
 
         public async Task SaveAsync()
         {

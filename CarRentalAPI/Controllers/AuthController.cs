@@ -4,6 +4,7 @@ using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CarRentalAPI.Controllers
 {
@@ -19,8 +20,8 @@ namespace CarRentalAPI.Controllers
         }
 
         [HttpPost]
-        //[ServiceFilter(typeof(ValidationFilterAttribute))]
         [Route("Register")]
+        [SwaggerOperation(Summary = "Create new Account", Description = "User needs to provide unique Email and Username")]
         public async Task<IActionResult> RegisterUser([FromBody] UserRegistrationDto registerRequest)
         {
             var userResult = await repository.UserAuthentication.RegisterUserAsync(registerRequest);
@@ -34,6 +35,8 @@ namespace CarRentalAPI.Controllers
 
         [HttpPost]
         [Route("login")]
+        [SwaggerOperation(Summary = "Login to Account", 
+            Description = "Provide correct Username and Password, Lockout is enabled 5 attempts will block account for 5 minutes!")]
         public async Task<IActionResult> Authenticate([FromForm] UserLoginDto loginRequest)
         {
             if (!await repository.UserAuthentication.ValidateUserAsync(loginRequest))

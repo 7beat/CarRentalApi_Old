@@ -5,6 +5,7 @@ using CarRentalAPI.Models.DTO;
 using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace CarRentalAPI.Controllers
 {
@@ -22,6 +23,7 @@ namespace CarRentalAPI.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Summary = "Retrieve all rentals", Description = "Retriving all rentals from Db as Dto")]
         public async Task<IActionResult> GetAllRentals()
         {
             var rentalsDomain = await repository.Rentals.GetAllAsync();
@@ -34,6 +36,7 @@ namespace CarRentalAPI.Controllers
         [HttpGet]
         [Route("{id:int}")]
         [ActionName("GetRentalById")]
+        [SwaggerOperation(Summary = "Retrieve single rental", Description = "Retrieve single rental by id as Dto")]
         public async Task<IActionResult> GetRentalById(int id)
         {
             var rentalDomain = await repository.Rentals.GetByIdAsync(id);
@@ -47,6 +50,8 @@ namespace CarRentalAPI.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Add new rental",
+            Description = "Add new rental, controller will validate if given object has set proper date and if it will colide with existing rental of given vehicle")]
         public async Task<IActionResult> AddRental([FromBody] Models.DTO.RentalAddRequest rentalAddRequest)
         {
             if (!await ValidateAddRental(rentalAddRequest))
@@ -74,6 +79,8 @@ namespace CarRentalAPI.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
+        [SwaggerOperation(Summary = "Modify rental",
+            Description = "Modify existing rental, controller will validate if given object has proper date and if it's not coliding with existing rentals of given vehicle")]
         public async Task<IActionResult> UpdateRental(int id, [FromBody] Models.DTO.RentalUpdateRequest rentalAddRequest)
         {
             if (!await ValidateUpdateRental(id, rentalAddRequest))
@@ -99,6 +106,7 @@ namespace CarRentalAPI.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
+        [SwaggerOperation(Summary = "Delete rental", Description = "Delete rental by id")]
         public async Task<IActionResult> DeteleRental(int id)
         {
             var rentalDomain = await repository.Rentals.DeleteAsync(id);

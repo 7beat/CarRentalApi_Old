@@ -12,16 +12,12 @@ namespace CarRentalAPI.Controllers
     [ApiController]
     public class VehiclesController : ControllerBase
     {
-        private readonly IVehicleRepository vehicleRepository;
-        private readonly IVehicle2Repository vehicle2Repository;
         private readonly IRepositoryManager repository;
         private readonly IMapper mapper;
-        public VehiclesController(IVehicleRepository vehicleRepository, IMapper mapper, IVehicle2Repository vehicle2Repository, IRepositoryManager repository)
+        public VehiclesController(IRepositoryManager repository, IMapper mapper)
         {
-            this.vehicleRepository = vehicleRepository;
-            this.mapper = mapper;
-            this.vehicle2Repository = vehicle2Repository;
             this.repository = repository;
+            this.mapper = mapper;
         }
 
         [HttpGet]

@@ -79,29 +79,23 @@ namespace CarRentalAPI.Controllers
             if (!ValidateUpdateVehicle(updateVehicleRequest))
                 return BadRequest(ModelState);
 
-            //var vehicleDomain = new Models.Domain.Vehicle
-            //{
-            //    Model = updateVehicleRequest.Model,
-            //    ColorId = updateVehicleRequest.Color,
-            //};
+            var vehicleDomain = new Models.Domain.Vehicle
+            {
+                Model = updateVehicleRequest.Model,
+                ColorId = updateVehicleRequest.Color,
+            };
 
-            //vehicleDomain = await vehicleRepository.UpdateAsync(id, vehicleDomain);
-
-            // New
-            // Vehicles .GetById
-            var vehicleDomain = await repository.Vehicle2.GetVehicle(id, true);
+            vehicleDomain = await repository.Vehicles.UpdateAsync(id, vehicleDomain);
 
             if (vehicleDomain is null)
                 return NotFound();
 
-            mapper.Map(updateVehicleRequest, vehicleDomain);
-            await repository.Vehicle2.UpdateVehicle(vehicleDomain);
             await repository.SaveAsync();
 
-            var vehicleDTO = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
+            var vehicleDto = mapper.Map<Models.DTO.Vehicle>(vehicleDomain);
 
-            return Ok(vehicleDTO);
-            //return CreatedAtAction(nameof(GetVehicleById), new { id = vehicleDTO.Id }, vehicleDTO);
+            return Ok(vehicleDto);
+            //return NoContent();
         }
 
         [HttpDelete]

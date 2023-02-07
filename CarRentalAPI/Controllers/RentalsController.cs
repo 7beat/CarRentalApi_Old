@@ -71,6 +71,7 @@ namespace CarRentalAPI.Controllers
 
             // Get new object with relations
             var updatedRentalDomain = await repoMgr.Rentals.GetByIdAsync(rentalDomain.Id);
+            // rentalDomain = 
 
             var rentalDto = mapper.Map<Models.DTO.Rental>(updatedRentalDomain);
 
@@ -105,10 +106,12 @@ namespace CarRentalAPI.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> DeteleRental(int id)
         {
-            var rentalDomain = await rentalRepository.DeleteAsync(id);
+            var rentalDomain = await repoMgr.Rentals.DeleteAsync(id);
 
             if (rentalDomain is null)
                 return NotFound();
+
+            await repoMgr.SaveAsync();
 
             var rentalDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
             return Ok(rentalDto);

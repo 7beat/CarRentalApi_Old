@@ -55,15 +55,27 @@ namespace CarRentalAPI.Repositories
         }
 
         public async Task<Rental> DeleteAsync(int id)
+        //{
+        //    var existingRental = await _appDbContext.Rentals.FindAsync(id);
+
+        //    if (existingRental is not null)
+        //    {
+        //        _appDbContext.Rentals.Remove(existingRental);
+        //        await _appDbContext.SaveChangesAsync();
+
+        //        return existingRental;
+        //    }
+        //    return null;
+        //}
         {
-            var existingRental = await _appDbContext.Rentals.FindAsync(id);
+            var existingVehicle = await FindByConditionAsync(x => x.Id.Equals(id), true);
+            var result = await existingVehicle.FirstOrDefaultAsync();
 
-            if (existingRental is not null)
+            if (result is not null)
             {
-                _appDbContext.Rentals.Remove(existingRental);
-                await _appDbContext.SaveChangesAsync();
+                await RemoveAsync(result);
 
-                return existingRental;
+                return result;
             }
             return null;
         }

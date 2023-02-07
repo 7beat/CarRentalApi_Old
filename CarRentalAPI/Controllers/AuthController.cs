@@ -34,7 +34,7 @@ namespace CarRentalAPI.Controllers
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Authenticate([FromBody] UserLoginDto loginRequest)
+        public async Task<IActionResult> Authenticate([FromForm] UserLoginDto loginRequest)
         {
             if (!await repository.UserAuthentication.ValidateUserAsync(loginRequest))
             {

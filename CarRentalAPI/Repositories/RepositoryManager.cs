@@ -11,6 +11,7 @@ namespace CarRentalAPI.Repositories
         private readonly AppDbContext dbContext;
         private readonly IVehicle2Repository _vehicle2Repository;
         private readonly IVehicleRepository _vehicleRepository;
+        private readonly IRentalRepository _rentalRepository;
         private IUserAuthenticationRepository _userAuthenticationRepository;
         private UserManager<AppUser> _userManager;
         private IConfiguration _configuration;
@@ -36,6 +37,8 @@ namespace CarRentalAPI.Repositories
         public IVehicle2Repository Vehicle2 => _vehicle2Repository ?? new Vehicle2Repository(dbContext);
 
         public IVehicleRepository Vehicles => _vehicleRepository ?? new VehicleRepository(dbContext);
+        public IRentalRepository Rentals => _rentalRepository ?? new RentalRepository(dbContext);
+
 
         public IUserAuthenticationRepository UserAuthentication
         {

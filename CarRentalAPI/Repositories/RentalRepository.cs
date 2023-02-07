@@ -6,29 +6,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarRentalAPI.Repositories
 {
-    public class RentalRepository : IRentalRepository
+    public class RentalRepository : RepositoryBase<Rental>, IRentalRepository
     {
         private readonly AppDbContext _appDbContext;
-        public RentalRepository(AppDbContext appContext)
+        public RentalRepository(AppDbContext appContext) : base(appContext)
         {
-            _appDbContext = appContext;
+            //_appDbContext = appContext;
         }
 
         public async Task<IEnumerable<Rental>> GetAllAsync()
         {
-            return await _appDbContext.Rentals
-                .Include(x => x.User)
-                .Include(x => x.Vehicle)
-                .ThenInclude(x => x.Color)
-                .ToListAsync();
+            //return await _appDbContext.Rentals
+            //    .Include(x => x.User)
+            //    .Include(x => x.Vehicle)
+            //    .ThenInclude(x => x.Color)
+            //    .ToListAsync();
+            var query = await FindAllAsync(false);
+            var result = await query.Include(x => x.User).Include(x => x.Vehicle).ThenInclude(x => x.Color).ToListAsync();
+            return result;
         }
 
         public async Task<Rental> GetByIdAsync(int id)
         {
-            return await _appDbContext.Rentals
-                .Include(x => x.Vehicle)
-                .ThenInclude(x => x.Color)
-                .FirstOrDefaultAsync(x => x.Id == id);
+            //return await _appDbContext.Rentals
+            //    .Include(x => x.Vehicle)
+            //    .ThenInclude(x => x.Color)
+            //    .FirstOrDefaultAsync(x => x.Id == id);
+            var query = await FindByConditionAsync(x => x.Id.Equals(id), false);
+            var result = await query.Include(x => x.Vehicle).ThenInclude(x => x.Color).SingleOrDefaultAsync();
+            return result;
         }
 
         public async Task<Rental> AddAsync(Rental rental)

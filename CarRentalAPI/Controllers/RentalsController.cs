@@ -51,7 +51,7 @@ namespace CarRentalAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRental([FromBody] Models.DTO.RentalAddRequest rentalAddRequest)
         {
-            if (!ValidateAddRental(rentalAddRequest))
+            if (!await ValidateAddRental(rentalAddRequest))
                 return BadRequest(ModelState);
 
             var rentalDomain = new Models.Domain.Rental
@@ -87,7 +87,6 @@ namespace CarRentalAPI.Controllers
                 EndDate = rentalAddRequest.EndDate
             };
 
-            //rentalDomain = await rentalRepository.UpdateAsync(id, rentalDomain);
             rentalDomain = await repository.Rentals.UpdateAsync(id, rentalDomain);
 
             if (rentalDomain is null)
@@ -115,7 +114,7 @@ namespace CarRentalAPI.Controllers
             return Ok(rentalDto);
         }
 
-        private bool ValidateAddRental(Models.DTO.RentalAddRequest newRental)
+        private async Task<bool> ValidateAddRental(Models.DTO.RentalAddRequest newRental)
         {
             if (newRental.UserId <= 0)
             {
@@ -129,12 +128,14 @@ namespace CarRentalAPI.Controllers
                 return false;
             }
 
-            foreach (var item in _appDbContext.Rentals.Where(x => x.Vehicle.Id == newRental.VehicleId)) // All rentals of given car
+            var existingRentals = await repository.Rentals.GetAllAsync();
+
+            foreach (var item in existingRentals.Where(x => x.Vehicle.Id == newRental.VehicleId)) // All rentals of given car
             {
                 // Is a start or end of new rental between start and end of existing one?
                 if (newRental.StartDate.IsInRange(item.StartDate, item.EndDate) || newRental.EndDate.IsInRange(item.StartDate, item.EndDate))
                 {
-                    // Dates are coliding
+                    // Dates are coliding, new rental is trying to be inserted under exising one!
                     ModelState.AddModelError(nameof(newRental), $"Dates are coliding with {item.Id}");
                 }
 

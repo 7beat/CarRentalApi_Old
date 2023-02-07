@@ -16,17 +16,17 @@ namespace CarRentalAPI.Repositories
     {
 
         private readonly UserManager<AppUser> _userManager;
-        private readonly SignInManager<AppUser> _signInManager;
+        //private readonly SignInManager<AppUser> _signInManager;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private AppUser? _user;
 
-        public UserAuthenticationRepository(UserManager<AppUser> userManager, IMapper mapper, IConfiguration configuration, SignInManager<AppUser> signInManager)
+        public UserAuthenticationRepository(UserManager<AppUser> userManager, /*IMapper mapper,*/ IConfiguration configuration /*SignInManager<AppUser> signInManager*/)
         {
             _userManager = userManager;
-            _mapper = mapper;
+            //_mapper = mapper;
             _configuration = configuration;
-            _signInManager = signInManager;
+            //_signInManager = signInManager;
         }
 
         public async Task<IdentityResult> RegisterUserAsync(UserRegistrationDto userRegistration)

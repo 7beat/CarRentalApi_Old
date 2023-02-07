@@ -6,6 +6,7 @@
         //IUserAuthenticationRepository UserAuthentication { get; }
         IVehicleRepository Vehicles { get; }
         IRentalRepository Rentals { get; }
+        IUserRepository Users { get; }
         IUserAuthenticationRepository UserAuthentication { get; }
         Task SaveAsync();
     }

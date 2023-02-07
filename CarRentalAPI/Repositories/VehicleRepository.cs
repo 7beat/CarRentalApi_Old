@@ -51,15 +51,15 @@ namespace CarRentalAPI.Repositories
             var result = await existingVehicle.FirstOrDefaultAsync();
 
 
-            if (existingVehicle is null)
+            if (result is null)
                 return null;
 
-            ////Modification
-            //existingVehicle.ColorId = vehicle.ColorId;
-            //existingVehicle.Model = vehicle.Model;
-            //existingVehicle.Model = vehicle.Model;
+            //Modification
+            result.ColorId = vehicle.ColorId;
+            result.Model = vehicle.Model;
 
-            //await _appDbContext.SaveChangesAsync();
+            await base.UpdateAsync(result);
+
             return result; //???
         }
     }

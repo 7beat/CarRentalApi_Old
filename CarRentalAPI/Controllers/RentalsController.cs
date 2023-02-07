@@ -92,10 +92,13 @@ namespace CarRentalAPI.Controllers
                 EndDate = rentalAddRequest.EndDate
             };
 
-            rentalDomain = await rentalRepository.UpdateAsync(id, rentalDomain);
+            //rentalDomain = await rentalRepository.UpdateAsync(id, rentalDomain);
+            rentalDomain = await repoMgr.Rentals.UpdateAsync(id, rentalDomain);
 
             if (rentalDomain is null)
                 return BadRequest();
+
+            await repoMgr.SaveAsync();
 
             var rentalDto = mapper.Map<Models.DTO.Rental>(rentalDomain);
 

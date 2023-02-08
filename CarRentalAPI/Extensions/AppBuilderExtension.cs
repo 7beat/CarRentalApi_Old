@@ -38,6 +38,38 @@ namespace CarRentalAPI.Extensions
             }
         }
 
+        /// <summary>
+        /// Assigns vehicles to users basend on rental's start and end date
+        /// </summary>
+        /// <remarks>
+        /// If there's rental happening at the start of a program, it will automatically assign vehicle to user
+        /// </remarks>
+        /// <param name="app"></param>
+        /// <returns></returns>
+        public static async Task AssignVehiclesToUsers(this IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+
+                using (var context = new AppDbContext(
+                scope.ServiceProvider.GetRequiredService<DbContextOptions<AppDbContext>>()))
+                {
+                    // Foreach rental in Db
+                    foreach (var rental in context.Rentals.Include(x => x.Vehicle))
+                    {
+                        // Check if today is in range of rental start and rental end
+                        if (DateOnly.FromDateTime(DateTime.Today).IsInRange(rental.StartDate, rental.EndDate))
+                        {
+                            // Assign rented vehicle to user
+                            rental.Vehicle.UserId = rental.UserId;
+                        }
+                    }
+                    await context.SaveChangesAsync();
+                }
+            }
+        }
+
         private static async Task<int> EnsureUser(
             IServiceProvider serviceProvider,
             string userName, string initPw)

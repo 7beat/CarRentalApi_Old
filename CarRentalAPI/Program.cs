@@ -41,6 +41,8 @@ var app = builder.Build();
 // WIP
 await app.SeedIdentityDb(app.Configuration.GetValue<bool>("AutoMigration"));
 
+//await app.AssignVehiclesToUsers();
+
 
 if (app.Environment.IsDevelopment())
 {

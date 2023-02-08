@@ -1,4 +1,5 @@
 # CarRentalAPI
+## Summary
 Simple Web API, providing controllers with endpoints to perform CRUD operations on __Vehicles__ and __Rentals__ data using Entity Framework and Unit Of Work patter, to ensure that all database changes are performed as a single transaction, reducing the risk of data corruption.
 
 ## Features

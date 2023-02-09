@@ -12,8 +12,8 @@ namespace CarRentalAPI.Services
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            string fromMail = "7beat123@gmail.com";
-            string fromPassword = "gogyydxgwwipxmzj";
+            string fromMail = "[smtpEmail]";
+            string fromPassword = "[AppPassword]";
 
             MailMessage message = new MailMessage();
             message.From = new MailAddress(fromMail);
@@ -29,7 +29,6 @@ namespace CarRentalAPI.Services
                 EnableSsl = true,
             };
             smtpClient.Send(message);
-            //await Task.Run(() => smtpClient.Send(message));
         }
     }
 }

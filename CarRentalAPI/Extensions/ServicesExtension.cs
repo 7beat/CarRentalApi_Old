@@ -6,10 +6,12 @@ using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Profiles;
 using CarRentalAPI.Repositories;
 using CarRentalAPI.Repositories.Interfaces;
+using CarRentalAPI.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -126,6 +128,9 @@ namespace CarRentalAPI.Extensions
 
         public static void ConfigureRepositories(this IServiceCollection services)
             => services.AddScoped<IRepositoryManager, RepositoryManager>();
+
+        public static void ConfigureEmailService(this IServiceCollection services)
+            => services.AddTransient<IEmailSender, EmailSender>();
         
         public static void ConfigureFluentValidation(this IServiceCollection services)
         {

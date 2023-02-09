@@ -9,5 +9,7 @@ namespace CarRentalAPI.Repositories.Interfaces
         Task<IdentityResult> RegisterUserAsync(UserRegistrationDto user);
         Task<bool> ValidateUserAsync(UserLoginDto loginDto);
         Task<string> CreateTokenAsync();
+        Task<(string token, int userId)> CreateEmailCredentials();
+        Task<IdentityResult> ConfirmUserEmail(AppUser user, string token);
     }
 }

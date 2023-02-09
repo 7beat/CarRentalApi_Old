@@ -1,13 +1,4 @@
-using CarRentalAPI.Data;
 using CarRentalAPI.Extensions;
-using CarRentalAPI.Models.Identity;
-using CarRentalAPI.Repositories;
-using CarRentalAPI.Repositories.Interfaces;
-using FluentValidation;
-using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +20,9 @@ builder.Services.ConfigureJWT(builder.Configuration);
 
 // Repositories
 builder.Services.ConfigureRepositories();
+
+// Email sender
+builder.Services.ConfigureEmailService();
 
 // Mapper
 builder.Services.ConfigureMapping();

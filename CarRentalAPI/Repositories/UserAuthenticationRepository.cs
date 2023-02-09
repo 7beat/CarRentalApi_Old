@@ -4,6 +4,7 @@ using CarRentalAPI.Models.DTO;
 using CarRentalAPI.Models.Identity;
 using CarRentalAPI.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -30,6 +31,10 @@ namespace CarRentalAPI.Repositories
         {
             var user = _mapper.Map<AppUser>(userRegistration);
             var result = await _userManager.CreateAsync(user, userRegistration.Password);
+
+            if (result.Succeeded)
+                _user = user;
+
             return result;
         }
 
@@ -108,6 +113,24 @@ namespace CarRentalAPI.Repositories
             signingCredentials: signingCredentials
             );
             return tokenOptions;
+        }
+
+        public async Task<(string token, int userId)> CreateEmailCredentials()
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(_user);
+            var userId = _user.Id;
+            return (token, userId);
+        }
+
+        public void ConfirmEmail()
+        {
+
+        }
+
+        public async Task<IdentityResult> ConfirmUserEmail(AppUser user, string token)
+        {
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return result;
         }
     }
 }

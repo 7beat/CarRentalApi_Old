@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using CarRentalAPI.Data;
 using CarRentalAPI.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace CarRentalAPI.Controllers
@@ -50,7 +46,7 @@ namespace CarRentalAPI.Controllers
         [HttpPost]
         [Consumes("application/json")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(Models.DTO.Vehicle), 201)]
+        [ProducesResponseType(typeof(Models.DTO.Vehicle), StatusCodes.Status201Created)]
         [SwaggerOperation(Summary = "Add new vehicle", Description = "Add new vehicle, display new object with all relations")]
         public async Task<IActionResult> AddVehicle([FromBody] Models.DTO.AddVehicleRequest addVehicleRequest)
         {
@@ -70,8 +66,8 @@ namespace CarRentalAPI.Controllers
 
             var vehicleDto = mapper.Map<Models.DTO.Vehicle>(updatedVehicleDomain);
 
-            //201
-            return CreatedAtAction(nameof(GetVehicleById), new {id = vehicleDto.Id}, vehicleDto);
+            // 201
+            return CreatedAtAction(nameof(GetVehicleById), new { id = vehicleDto.Id }, vehicleDto);
         }
 
         [HttpPut]

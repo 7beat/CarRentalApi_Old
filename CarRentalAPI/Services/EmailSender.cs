@@ -22,6 +22,7 @@ namespace CarRentalAPI.Services
             message.Body = "<html><body> " + htmlMessage + " </body></html>";
             message.IsBodyHtml = true;
 
+            // gmail
             var smtpClient = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,

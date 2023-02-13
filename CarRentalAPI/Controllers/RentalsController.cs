@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
-using CarRentalAPI.Data;
 using CarRentalAPI.Extensions;
-using CarRentalAPI.Models.DTO;
 using CarRentalAPI.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -59,10 +56,10 @@ namespace CarRentalAPI.Controllers
 
             var rentalDomain = new Models.Domain.Rental
             {
-                UserId= rentalAddRequest.UserId,
-                VehicleId= rentalAddRequest.VehicleId,
-                StartDate= rentalAddRequest.StartDate,
-                EndDate= rentalAddRequest.EndDate
+                UserId = rentalAddRequest.UserId,
+                VehicleId = rentalAddRequest.VehicleId,
+                StartDate = rentalAddRequest.StartDate,
+                EndDate = rentalAddRequest.EndDate
             };
 
             await repository.Rentals.AddAsync(rentalDomain);
@@ -148,14 +145,14 @@ namespace CarRentalAPI.Controllers
                 if (newRental.StartDate.IsInRange(item.StartDate, item.EndDate) || newRental.EndDate.IsInRange(item.StartDate, item.EndDate))
                 {
                     // Dates are coliding, new rental is trying to be inserted under exising one!
-                    ModelState.AddModelError(nameof(newRental), $"Dates are coliding with {item.Id}");
+                    ModelState.AddModelError(nameof(newRental), $"Rental is trying to be inserted under {item.Id}");
                 }
 
                 // Is a start or end of existing rental between start and end of new one? New Rental cant happen while existing rental is happening!
                 if (item.StartDate.IsInRange(newRental.StartDate, newRental.EndDate) || item.EndDate.IsInRange(newRental.StartDate, newRental.EndDate))
                 {
                     // Dates are coliding, new rental is trying to be inserted over existing one!
-                    ModelState.AddModelError(nameof(newRental), $"Dates are coliding with {item.Id}");
+                    ModelState.AddModelError(nameof(newRental), $"Rental is trying to be inserted over {item.Id}");
                 }
             }
 

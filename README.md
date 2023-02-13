@@ -14,3 +14,12 @@ Simple Web API, providing controllers with endpoints to perform CRUD operations 
 * Documentation
 
 # Images
+
+## Home
+![](CarRentalAPI/img/AllEndpoints.png)
+## Login
+![](CarRentalAPI/img/Login.png)
+## Token
+![](CarRentalAPI/img/Token.png)
+## Rental add over existing one
+![](CarRentalAPI/img/RentalOver.png)
